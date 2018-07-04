@@ -15,12 +15,6 @@
     startActivity(Intent(this, ThreeHundredSixtyPlayerActivity::class.java).apply {
         putExtra(ThreeHundredSixtyPlayerActivity.FILE_PATH, "/${Environment.getExternalStorageDirectory()}/DCIM/large.jpg")
     })
-    
-# GL_MAX_TEXTURE_SIZE
-
-Player will log max supported texture size during surface view creation. Look out for **ThreeHundredSixtyPlayer**, e.g:
-    
-    ThreeHundredSixtyPlayer: GL_MAX_TEXTURE_SIZE 8192x8192
      
 # How to install (tbd)
 
@@ -29,6 +23,12 @@ Atm only as module
     dependencies {
         api project(':ThreeHundertSixtyPlayer')
     }
+    
+# GL_MAX_TEXTURE_SIZE
+
+Player will log max supported texture size during surface view creation. Look out for **ThreeHundredSixtyPlayer**, e.g:
+    
+    ThreeHundredSixtyPlayer: GL_MAX_TEXTURE_SIZE 8192x8192
 
 # Resize images
 
