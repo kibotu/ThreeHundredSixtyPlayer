@@ -18,6 +18,8 @@
      
 # How to install
 
+to be decided
+
 # Resize images
 
     brew install imagemagick
