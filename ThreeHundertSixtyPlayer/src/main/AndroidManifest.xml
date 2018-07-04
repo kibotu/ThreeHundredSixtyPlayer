@@ -9,7 +9,8 @@
 
         <activity
             android:name="com.exozet.threehundredsixty.player.ThreeHundredSixtyPlayerActivity"
-            android:label="@string/app_name" />
+            android:label="@string/app_name"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" />
 
         <activity android:name="com.theta360.sample.v2.ImageListActivity" />
 

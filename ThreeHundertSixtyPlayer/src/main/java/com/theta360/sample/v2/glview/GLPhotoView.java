@@ -8,6 +8,7 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.widget.Scroller;
+
 import com.theta360.sample.v2.model.Constants;
 import com.theta360.sample.v2.model.Photo;
 import com.theta360.sample.v2.model.RotateInertia;
