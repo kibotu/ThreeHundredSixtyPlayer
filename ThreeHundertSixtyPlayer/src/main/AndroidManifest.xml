@@ -12,10 +12,6 @@
             android:label="@string/app_name"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" />
 
-        <activity android:name="com.theta360.sample.v2.ImageListActivity" />
-
-        <activity android:name="com.theta360.sample.v2.GLPhotoActivity" />
-
     </application>
 
 </manifest>

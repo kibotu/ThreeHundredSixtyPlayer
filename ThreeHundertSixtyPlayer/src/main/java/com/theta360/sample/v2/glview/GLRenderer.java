@@ -22,30 +22,30 @@ public class GLRenderer implements Renderer {
 
     private final String VSHADER_SRC =
             "attribute vec4 aPosition;\n" +
-            "attribute vec2 aUV;\n" +
-            "uniform mat4 uProjection;\n" +
-            "uniform mat4 uView;\n" +
-            "uniform mat4 uModel;\n" +
-            "varying vec2 vUV;\n" +
-            "void main() {\n" +
-            "  gl_Position = uProjection * uView * uModel * aPosition;\n" +
-            "  vUV = aUV;\n" +
-            "}\n";
+                    "attribute vec2 aUV;\n" +
+                    "uniform mat4 uProjection;\n" +
+                    "uniform mat4 uView;\n" +
+                    "uniform mat4 uModel;\n" +
+                    "varying vec2 vUV;\n" +
+                    "void main() {\n" +
+                    "  gl_Position = uProjection * uView * uModel * aPosition;\n" +
+                    "  vUV = aUV;\n" +
+                    "}\n";
 
     private final String FSHADER_SRC =
             "precision mediump float;\n" +
-            "varying vec2 vUV;\n" +
-            "uniform sampler2D uTex;\n" +
-            "void main() {\n" +
-            "  gl_FragColor = texture2D(uTex, vUV);\n" +
-            "}\n";
+                    "varying vec2 vUV;\n" +
+                    "uniform sampler2D uTex;\n" +
+                    "void main() {\n" +
+                    "  gl_FragColor = texture2D(uTex, vUV);\n" +
+                    "}\n";
 
 
     private static final float Z_NEAR = 0.1f;
     private static final float Z_FAR = 100.0f;
 
-    private UVSphere mEastShell = null;
-    private UVSphere mWestShell = null;
+    private UVSphere mEastShell;
+    private UVSphere mWestShell;
 
     private double mRotationAngleY;
     private double mRotationAngleXZ;
@@ -92,13 +92,14 @@ public class GLRenderer implements Renderer {
 
     /**
      * onDrawFrame Method
+     *
      * @param gl GLObject (not used)
      */
     @Override
     public void onDrawFrame(final GL10 gl) {
 
-        mCameraDirectionX = (float) (Math.cos(mRotationAngleXZ)*Math.cos(mRotationAngleY));
-        mCameraDirectionZ = (float) (Math.sin(mRotationAngleXZ)*Math.cos(mRotationAngleY));
+        mCameraDirectionX = (float) (Math.cos(mRotationAngleXZ) * Math.cos(mRotationAngleY));
+        mCameraDirectionZ = (float) (Math.sin(mRotationAngleXZ) * Math.cos(mRotationAngleY));
         mCameraDirectionY = (float) Math.sin(mRotationAngleY);
 
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
@@ -141,33 +142,30 @@ public class GLRenderer implements Renderer {
         GLES20.glUniform1i(mTexHandle, 0);
 
         mWestShell.draw(mPositionHandle, mUVHandle);
-
-        return;
     }
 
     /**
      * onSurfaceChanged Method
-     * @param gl GLObject (not used)
-     * @param width Screen width
+     *
+     * @param gl     GLObject (not used)
+     * @param width  Screen width
      * @param height Screen height
      */
     @Override
     public void onSurfaceChanged(final GL10 gl, final int width, final int height) {
 
-        int _height = height;
-        mScreenAspectRatio = (float) width / (float) (_height == 0 ? 1 : _height);
+        mScreenAspectRatio = (float) width / (float) (height == 0 ? 1 : height);
 
-        GLES20.glViewport(0, 0, width, _height);
+        GLES20.glViewport(0, 0, width, height);
 
         Matrix.setLookAtM(mViewMatrix, 0, mCameraPosX, mCameraPosY, mCameraPosZ, mCameraDirectionX, mCameraDirectionY, mCameraDirectionZ, 0.0f, 1.0f, 0.0f);
         Matrix.perspectiveM(mProjectionMatrix, 0, mCameraFovDegree, mScreenAspectRatio, Z_NEAR, Z_FAR);
-
-        return;
     }
 
     /**
      * onSurfaceCreated Method
-     * @param gl GLObject (not used)
+     *
+     * @param gl     GLObject (not used)
      * @param config EGL Setting Object
      */
     @Override
@@ -195,31 +193,30 @@ public class GLRenderer implements Renderer {
         mModelMatrixHandle = GLES20.glGetUniformLocation(program, "uModel");
 
         GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-
-        return;
     }
 
 
     /**
      * Rotation process method
+     *
      * @param xz X axis direction rotation value
-     * @param y Y axis direction rotation value
+     * @param y  Y axis direction rotation value
      */
     public void rotate(float xz, float y) {
         mRotationAngleXZ += xz;
         mRotationAngleY += y;
-        if (mRotationAngleY > (Math.PI/2)) {
-            mRotationAngleY = (Math.PI/2);
+        if (mRotationAngleY > (Math.PI / 2)) {
+            mRotationAngleY = (Math.PI / 2);
         }
-        if (mRotationAngleY < -(Math.PI/2)) {
-            mRotationAngleY = -(Math.PI/2);
+        if (mRotationAngleY < -(Math.PI / 2)) {
+            mRotationAngleY = -(Math.PI / 2);
         }
-        return;
     }
 
 
     /**
      * Zoom in/Zoom out method
+     *
      * @param ratio Scale value: Zoom in process performed if the value is 1.0 or more; zoom out process is performed if the value is less than 1.0
      */
     public void scale(float ratio) {
@@ -229,40 +226,38 @@ public class GLRenderer implements Renderer {
             if (mCameraFovDegree > Constants.CAMERA_FOV_DEGREE_MAX) {
                 mCameraFovDegree = Constants.CAMERA_FOV_DEGREE_MAX;
             }
-        }
-        else {
+        } else {
             mCameraFovDegree = mCameraFovDegree * (Constants.SCALE_RATIO_TICK_REDUCTION);
             if (mCameraFovDegree < Constants.CAMERA_FOV_DEGREE_MIN) {
                 mCameraFovDegree = Constants.CAMERA_FOV_DEGREE_MIN;
             }
         }
-
-        return;
     }
 
 
     /**
      * Sets the texture for the sphere
+     *
      * @param texture Photo object for texture
      */
     public void setTexture(Photo texture) {
         mTexture = texture;
         mTextureUpdate = true;
-        return;
     }
 
     /**
      * Acquires the set texture
+     *
      * @return Photo object for texture
      */
     public Photo getTexture() {
         return mTexture;
     }
 
-
     /**
      * GL error judgment method for debugging
-     * @param TAG TAG output character string
+     *
+     * @param TAG         TAG output character string
      * @param glOperation Message output character string
      */
     public static void checkGlError(String TAG, String glOperation) {
@@ -271,18 +266,16 @@ public class GLRenderer implements Renderer {
             Log.e(TAG, glOperation + ": glError " + error);
             throw new RuntimeException(glOperation + ": glError " + error);
         }
-        return;
     }
-
 
     /**
      * Texture setting method
+     *
      * @param texture Setting texture
      */
     public void loadTexture(final Bitmap texture) {
 
-        final Bitmap bitmap = texture;
-        int dividedWidth = bitmap.getWidth() / 2;
+        int dividedWidth = texture.getWidth() / 2;
 
         GLES20.glGenTextures(2, mTextures, 0);
 
@@ -295,17 +288,15 @@ public class GLRenderer implements Renderer {
             GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_CLAMP_TO_EDGE);
             GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_CLAMP_TO_EDGE);
 
-            Bitmap dividedBitmap = Bitmap.createBitmap(bitmap, (dividedWidth * textureIndex), 0, dividedWidth, bitmap.getHeight());
+            Bitmap dividedBitmap = Bitmap.createBitmap(texture, (dividedWidth * textureIndex), 0, dividedWidth, texture.getHeight());
 
             GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, dividedBitmap, 0);
             dividedBitmap.recycle();
         }
-
-        return;
     }
 
 
-    private int loadShader(int type, String shaderCode){
+    private int loadShader(int type, String shaderCode) {
 
         int shader = GLES20.glCreateShader(type);
 

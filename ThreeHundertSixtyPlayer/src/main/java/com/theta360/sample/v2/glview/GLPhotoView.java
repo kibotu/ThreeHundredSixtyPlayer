@@ -33,6 +33,7 @@ public class GLPhotoView extends GLSurfaceView {
 
     /**
      * Constructor
+     *
      * @param context Context
      */
     public GLPhotoView(Context context) {
@@ -42,8 +43,9 @@ public class GLPhotoView extends GLSurfaceView {
 
     /**
      * Constructor
+     *
      * @param context Context
-     * @param attrs Argument for resource
+     * @param attrs   Argument for resource
      */
     public GLPhotoView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -53,6 +55,7 @@ public class GLPhotoView extends GLSurfaceView {
 
     /**
      * onTouchEvent Event listener
+     *
      * @param event Event object
      * @return Process continuation judgment value
      */
@@ -121,7 +124,7 @@ public class GLPhotoView extends GLSurfaceView {
                     mScroller.abortAnimation();
                 }
 
-                if ((Math.abs(distanceX) > SWIPE_MAX_OF_PATH_X ) || (Math.abs(distanceY) > SWIPE_MAX_OF_PATH_Y )) {
+                if ((Math.abs(distanceX) > SWIPE_MAX_OF_PATH_X) || (Math.abs(distanceY) > SWIPE_MAX_OF_PATH_Y)) {
                     ret = false;
                 } else {
                     float diffX = distanceX / Constants.ON_SCROLL_DIVIDER_X;
@@ -147,7 +150,7 @@ public class GLPhotoView extends GLSurfaceView {
             @Override
             public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
 
-                mScroller.fling((int)e2.getX(), (int)e2.getY(), (int)velocityX, (int)velocityY, 0, getWidth(), 0, getHeight());
+                mScroller.fling((int) e2.getX(), (int) e2.getY(), (int) velocityX, (int) velocityY, 0, getWidth(), 0, getHeight());
                 mPrevX = e2.getX();
                 mPrevY = e2.getY();
 
@@ -156,8 +159,7 @@ public class GLPhotoView extends GLSurfaceView {
                     public void run() {
                         if (mRotateInertia == RotateInertia.INERTIA_0) {
                             // do nothing
-                        }
-                        else {
+                        } else {
                             mScroller.computeScrollOffset();
                             float diffX = mScroller.getCurrX() - mPrevX;
                             float diffY = mScroller.getCurrY() - mPrevY;
@@ -167,8 +169,7 @@ public class GLPhotoView extends GLSurfaceView {
                             if (mRotateInertia == RotateInertia.INERTIA_50) {
                                 diffX = diffX / Constants.ON_FLING_DIVIDER_X_FOR_INERTIA_50;
                                 diffY = diffY / Constants.ON_FLING_DIVIDER_Y_FOR_INERTIA_50;
-                            }
-                            else {
+                            } else {
                                 diffX = diffX / Constants.ON_FLING_DIVIDER_X_FOR_INERTIA_100;
                                 diffY = diffY / Constants.ON_FLING_DIVIDER_Y_FOR_INERTIA_100;
                             }
@@ -200,28 +201,26 @@ public class GLPhotoView extends GLSurfaceView {
         });
 
         mScroller = new Scroller(context);
-
-        return;
     }
 
 
     /**
      * Texture setting method
+     *
      * @param thumbnail Photo object for texture
      */
     public void setTexture(Photo thumbnail) {
         mRenderer.setTexture(thumbnail);
-        return;
     }
 
 
     /**
      * Inertia setting method
+     *
      * @param mRotateInertia Setting inertia value
      */
     public void setmRotateInertia(RotateInertia mRotateInertia) {
         this.mRotateInertia = mRotateInertia;
-        return;
     }
 
 }
