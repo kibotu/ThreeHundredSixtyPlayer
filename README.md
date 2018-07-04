@@ -16,9 +16,13 @@
         putExtra(ThreeHundredSixtyPlayerActivity.FILE_PATH, "/${Environment.getExternalStorageDirectory()}/DCIM/large.jpg")
     })
      
-# How to install
+# How to install (tbd)
 
-to be decided
+Atm only as module
+    
+    dependencies {
+        api project(':ThreeHundertSixtyPlayer')
+    }
 
 # Resize images
 
