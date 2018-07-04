@@ -13,7 +13,7 @@
 #### Load from file path (Note you require [READ_EXTERNAL_STORAGE Permission](https://developer.android.com/reference/android/Manifest.permission.html#READ_EXTERNAL_STORAGE)) 
     
     startActivity(Intent(this, ThreeHundredSixtyPlayerActivity::class.java).apply {
-        putExtra("ASSET_FILE_NAME", "/sdcard/DCIM/large.jpg")
+        putExtra(ThreeHundredSixtyPlayerActivity.FILE_PATH, "/${Environment.getExternalStorageDirectory()}/DCIM/large.jpg")
     })
      
 # How to install
