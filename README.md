@@ -10,11 +10,11 @@ Native OpenGLES 2.0 360 Degree Player
 
 #### [Equirectangular](https://developers.theta360.com/en/docs/introduction/)
 
-![Equirectangular](https://developers.theta360.com/intl/common/img/equirectangular.bmp)]
+![Equirectangular](https://developers.theta360.com/intl/common/img/equirectangular.bmp)
 
 #### [Dual-Fisheye](https://developers.theta360.com/en/docs/introduction/)
 
-![Dual-Fisheye](https://developers.theta360.com/intl/common/img/dualfisheye.bmp)]
+![Dual-Fisheye](https://developers.theta360.com/intl/common/img/dualfisheye.bmp)
 
 #### Load from asset folder 
 
