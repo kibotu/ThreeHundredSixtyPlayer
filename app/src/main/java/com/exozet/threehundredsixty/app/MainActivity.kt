@@ -16,9 +16,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-//        loadFromAssets()
+        loadFromAssets()
 
-        loadFromSDCard()
+        // loadFromSDCard()
     }
 
     private fun loadFromSDCard() =
