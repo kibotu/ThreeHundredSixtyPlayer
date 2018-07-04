@@ -210,9 +210,9 @@ public class GLPhotoView extends GLSurfaceView {
      * @param thumbnail Photo object for texture
      */
     public void setTexture(Photo thumbnail) {
+
         mRenderer.setTexture(thumbnail);
     }
-
 
     /**
      * Inertia setting method

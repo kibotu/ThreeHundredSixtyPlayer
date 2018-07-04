@@ -15,6 +15,12 @@
     startActivity(Intent(this, ThreeHundredSixtyPlayerActivity::class.java).apply {
         putExtra(ThreeHundredSixtyPlayerActivity.FILE_PATH, "/${Environment.getExternalStorageDirectory()}/DCIM/large.jpg")
     })
+    
+# GL_MAX_TEXTURE_SIZE
+
+Player will log max supported texture size during surface view creation. Look out for **ThreeHundredSixtyPlayer**, e.g:
+    
+    ThreeHundredSixtyPlayer: GL_MAX_TEXTURE_SIZE 8192x8192
      
 # How to install (tbd)
 
@@ -28,3 +34,8 @@ Atm only as module
 
     brew install imagemagick
     mogrify -resize 8192x -quality 100 "large.jpg" 
+    
+    
+## Contributors
+
+[Jan Rabe](jan.rabe@exozet.com)

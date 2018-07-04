@@ -1,6 +1,7 @@
 package com.theta360.sample.v2.glview;
 
 import android.graphics.Bitmap;
+import android.opengl.GLES10;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView.Renderer;
 import android.opengl.GLUtils;
@@ -10,6 +11,8 @@ import android.util.Log;
 import com.theta360.sample.v2.glview.model.UVSphere;
 import com.theta360.sample.v2.model.Constants;
 import com.theta360.sample.v2.model.Photo;
+
+import java.nio.IntBuffer;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -40,6 +43,7 @@ public class GLRenderer implements Renderer {
                     "  gl_FragColor = texture2D(uTex, vUV);\n" +
                     "}\n";
 
+    public static int GL_MAX_TEXTURE_SIZE = 2048;
 
     private static final float Z_NEAR = 0.1f;
     private static final float Z_FAR = 100.0f;
@@ -171,6 +175,14 @@ public class GLRenderer implements Renderer {
     @Override
     public void onSurfaceCreated(final GL10 gl, final EGLConfig config) {
 
+        GL_MAX_TEXTURE_SIZE = glGetIntegerv(GLES20.GL_MAX_TEXTURE_SIZE);
+
+        Bitmap b = mTexture.getPhoto();
+        if (b.getWidth() > GL_MAX_TEXTURE_SIZE || b.getHeight() > GL_MAX_TEXTURE_SIZE)
+            Log.e("ThreeHundredSixtyPlayer", "[setTexture] " + b.getWidth() + "w:" + b.getHeight() + "h is more than GL_MAX_TEXTURE_SIZE " + GL_MAX_TEXTURE_SIZE + "x" + GL_MAX_TEXTURE_SIZE);
+        else
+            Log.i("ThreeHundredSixtyPlayer", "GL_MAX_TEXTURE_SIZE " + GL_MAX_TEXTURE_SIZE + "x" + GL_MAX_TEXTURE_SIZE);
+
         int vShader;
         int fShader;
         int program;
@@ -195,6 +207,13 @@ public class GLRenderer implements Renderer {
         GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     }
 
+    private volatile IntBuffer buffer = IntBuffer.allocate(1);
+
+    public synchronized int glGetIntegerv(int value) {
+        buffer.clear();
+        GLES10.glGetIntegerv(value, buffer);
+        return buffer.get(0);
+    }
 
     /**
      * Rotation process method
