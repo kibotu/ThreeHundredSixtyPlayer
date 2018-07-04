@@ -6,7 +6,15 @@ Native OpenGLES 2.0 360 Degree Player
 
 # How to use
 
-### Start 360 Degree Activity by equirectangular bitmap
+### Start 360 Degree Activity by passing bitmap file path for or an  bitmap
+
+#### [Equirectangular](https://developers.theta360.com/en/docs/introduction/)
+
+![](https://developers.theta360.com/intl/common/img/equirectangular.bmp])
+
+#### [Dual-Fisheye](https://developers.theta360.com/en/docs/introduction/)
+
+![](https://developers.theta360.com/intl/common/img/dualfisheye.bmp])
 
 #### Load from asset folder 
 
