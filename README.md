@@ -56,7 +56,6 @@ Player will log max supported texture size during surface view creation. Look ou
 * Supports orientation changes
 * Supports automatically down scaling of images to GL_MAX_TEXTURE_SIZE
 * Supports equirectangular textures 
-
 * Supports dual-fish-eye-horizontal, dual-fish-eye-vertical textures 
 * Supports loading indicator
 * Supports loading from asset-folder
