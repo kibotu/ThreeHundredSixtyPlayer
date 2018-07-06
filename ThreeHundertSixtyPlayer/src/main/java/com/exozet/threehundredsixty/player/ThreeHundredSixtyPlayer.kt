@@ -16,8 +16,15 @@ class ThreeHundredSixtyPlayer private constructor() {
 
     private var uri: Uri? = null
 
+    private var motion: Boolean = false
+
     @ProjectionMode
     private var projectionMode: Int = PROJECTION_MODE_SPHERE
+
+    fun motion(motion: Boolean = true): ThreeHundredSixtyPlayer {
+        this.motion = motion
+        return this
+    }
 
     fun projectMode(@ProjectionMode projectionMode: Int): ThreeHundredSixtyPlayer {
         this.projectionMode = projectionMode
@@ -48,6 +55,7 @@ class ThreeHundredSixtyPlayer private constructor() {
             .apply {
                 putExtra(Uri::class.java.canonicalName, uri.toString())
                 putExtra(MDVRLibrary::class.java.canonicalName, projectionMode)
+                putExtra(MOTION, motion)
             })
 
     companion object {
@@ -57,6 +65,8 @@ class ThreeHundredSixtyPlayer private constructor() {
         const val PROJECTION_MODE_SPHERE = MDVRLibrary.PROJECTION_MODE_SPHERE
         const val PROJECTION_MODE_MULTI_FISH_EYE_HORIZONTAL = MDVRLibrary.PROJECTION_MODE_MULTI_FISH_EYE_HORIZONTAL
         const val PROJECTION_MODE_MULTI_FISH_EYE_VERTICAL = MDVRLibrary.PROJECTION_MODE_MULTI_FISH_EYE_VERTICAL
+
+        internal val MOTION = "MOTION"
 
         @IntDef(PROJECTION_MODE_SPHERE, PROJECTION_MODE_MULTI_FISH_EYE_HORIZONTAL, PROJECTION_MODE_MULTI_FISH_EYE_VERTICAL)
         @Retention(AnnotationRetention.SOURCE)

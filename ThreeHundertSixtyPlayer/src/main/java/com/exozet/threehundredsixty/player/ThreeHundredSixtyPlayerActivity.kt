@@ -44,6 +44,8 @@ internal class ThreeHundredSixtyPlayerActivity : AppCompatActivity() {
 
         motionSwitch.setOnCheckedChangeListener { _, isChecked -> vrLibrary?.switchInteractiveMode(this, if (isChecked) MDVRLibrary.INTERACTIVE_MODE_MOTION_WITH_TOUCH else MDVRLibrary.INTERACTIVE_MODE_TOUCH) }
 
+        motionSwitch.isChecked = intent?.extras?.getBoolean(ThreeHundredSixtyPlayer.MOTION) ?: false
+
         vrLibrary?.notifyPlayerChanged()
     }
 

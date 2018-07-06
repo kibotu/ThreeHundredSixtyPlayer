@@ -16,6 +16,7 @@ Start 360 Degree Activity by passing bitmap file path for or an  bitmap
                // (Note you require [READ_EXTERNAL_STORAGE Permission](https://developer.android.com/reference/android/Manifest.permission.html#READ_EXTERNAL_STORAGE))
                // .file("${Environment.getExternalStorageDirectory()}/DCIM/large.jpg") 
                .externalStorageFile("/DCIM/large.jpg")
+               .motion() // default: false 
                .startActivity() 
      
 ## Projection Modes
@@ -50,6 +51,7 @@ Player will log max supported texture size during surface view creation. Look ou
     
 # Changelog
 
+* Supports motion configuration
 * Supports motion sensors
 * Supports swiping 
 * Supports pinch zoom
