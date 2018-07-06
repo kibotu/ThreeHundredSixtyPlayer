@@ -1,14 +1,10 @@
 package com.exozet.threehundredsixty.player
 
-import android.Manifest
-import android.annotation.TargetApi
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.os.Environment
 import androidx.annotation.IntDef
-import androidx.annotation.RequiresPermission
 import com.asha.vrlib.MDVRLibrary
 import java.io.File
 import java.lang.ref.WeakReference

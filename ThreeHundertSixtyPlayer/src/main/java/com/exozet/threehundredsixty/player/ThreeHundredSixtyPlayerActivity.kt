@@ -93,8 +93,6 @@ internal class ThreeHundredSixtyPlayerActivity : AppCompatActivity() {
 
     private val TAG = this::class.java.simpleName
 
-//    public interface @ProjectionMode{}
-
     private fun cancelBusy() {
         progress.visibility = View.GONE
     }
