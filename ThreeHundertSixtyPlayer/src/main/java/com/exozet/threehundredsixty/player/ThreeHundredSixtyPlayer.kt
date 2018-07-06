@@ -1,10 +1,14 @@
 package com.exozet.threehundredsixty.player
 
+import android.Manifest
+import android.annotation.TargetApi
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Environment
 import androidx.annotation.IntDef
+import androidx.annotation.RequiresPermission
 import com.asha.vrlib.MDVRLibrary
 import java.io.File
 import java.lang.ref.WeakReference
@@ -24,23 +28,23 @@ class ThreeHundredSixtyPlayer private constructor() {
         return this
     }
 
-    fun assetFile(fileName: String): ThreeHundredSixtyPlayer {
-        uri = Uri.parse("file:///android_asset/$fileName")
+    fun assetFile(file: String): ThreeHundredSixtyPlayer {
+        uri = Uri.parse("file:///android_asset/$file")
         return this
     }
 
-    fun internalStorageFile(fileName: String): ThreeHundredSixtyPlayer {
-        uri = Uri.parse("${context.get()?.filesDir?.absolutePath}/$fileName")
+    fun internalStorageFile(file: String): ThreeHundredSixtyPlayer {
+        uri = Uri.parse("${context.get()?.filesDir?.absolutePath}/$file")
         return this
     }
 
-    fun externalStorageFile(fileName: String): ThreeHundredSixtyPlayer {
-        uri = Uri.parse("${Environment.getExternalStorageDirectory()}/$fileName")
+    fun externalStorageFile(file: String): ThreeHundredSixtyPlayer {
+        uri = Uri.parse("${Environment.getExternalStorageDirectory()}/$file")
         return this
     }
 
-    fun file(fileName: String): ThreeHundredSixtyPlayer {
-        uri = Uri.fromFile(File(fileName))
+    fun file(file: String): ThreeHundredSixtyPlayer {
+        uri = Uri.fromFile(File(file))
         return this
     }
 

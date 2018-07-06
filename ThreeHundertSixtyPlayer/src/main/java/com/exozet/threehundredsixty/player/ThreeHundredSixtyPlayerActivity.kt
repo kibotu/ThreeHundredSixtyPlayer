@@ -29,10 +29,11 @@ internal class ThreeHundredSixtyPlayerActivity : AppCompatActivity() {
 
         busy()
 
-        // we have no data
         val file = intent?.extras?.getString(Uri::class.java.canonicalName)
-        if (isEmpty(file))
+        if (isEmpty(file)) {
             finish()
+            return
+        }
 
         uri = Uri.parse(file)
 
