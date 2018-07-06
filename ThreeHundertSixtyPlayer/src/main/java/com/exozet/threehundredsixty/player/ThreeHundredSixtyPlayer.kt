@@ -12,8 +12,6 @@ import java.lang.ref.WeakReference
 
 class ThreeHundredSixtyPlayer private constructor() {
 
-    private var instance: ThreeHundredSixtyPlayer = this
-
     private lateinit var context: WeakReference<Context>
 
     private var uri: Uri? = null
