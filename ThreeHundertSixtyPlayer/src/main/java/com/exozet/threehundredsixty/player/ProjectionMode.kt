@@ -1,0 +1,10 @@
+package com.exozet.threehundredsixty.player
+
+import androidx.annotation.IntDef
+import com.exozet.threehundredsixty.player.ThreeHundredSixtyPlayer.Companion.PROJECTION_MODE_MULTI_FISH_EYE_HORIZONTAL
+import com.exozet.threehundredsixty.player.ThreeHundredSixtyPlayer.Companion.PROJECTION_MODE_MULTI_FISH_EYE_VERTICAL
+import com.exozet.threehundredsixty.player.ThreeHundredSixtyPlayer.Companion.PROJECTION_MODE_SPHERE
+
+@IntDef(PROJECTION_MODE_SPHERE, PROJECTION_MODE_MULTI_FISH_EYE_HORIZONTAL, PROJECTION_MODE_MULTI_FISH_EYE_VERTICAL)
+@Retention(AnnotationRetention.SOURCE)
+annotation class ProjectionMode

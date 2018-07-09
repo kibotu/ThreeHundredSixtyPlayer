@@ -1,33 +1,23 @@
 package com.exozet.threehundredsixty.player
 
-import android.content.res.Configuration
-import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
+import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.text.TextUtils.isEmpty
-import android.util.Log
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import com.asha.vrlib.MDVRLibrary
-import com.asha.vrlib.texture.MD360BitmapTexture
-import com.squareup.picasso.MemoryPolicy
-import com.squareup.picasso.Picasso
-import com.squareup.picasso.Target
+import com.exozet.parseAssetFile
+import com.exozet.threehundredsixty.player.ThreeHundredSixtyPlayer.Companion.INTERACTIVE_MODE_MOTION_WITH_TOUCH
+import com.exozet.threehundredsixty.player.ThreeHundredSixtyPlayer.Companion.PROJECTION_MODE_SPHERE
 import kotlinx.android.synthetic.main.activity_threehundredsixty_player.*
+import java.lang.ref.WeakReference
 
 
 internal class ThreeHundredSixtyPlayerActivity : AppCompatActivity() {
 
-    var vrLibrary: MDVRLibrary? = null
-
-    var uri: Uri? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_threehundredsixty_player)
-
-        busy()
 
         val file = intent?.extras?.getString(Uri::class.java.canonicalName)
         if (isEmpty(file)) {
@@ -35,92 +25,46 @@ internal class ThreeHundredSixtyPlayerActivity : AppCompatActivity() {
             return
         }
 
-        uri = Uri.parse(file)
+        threeHundredSixtyView.uri = parseAssetFile(file!!)
 
-        initVRLibrary()
+        threeHundredSixtyView.projectionMode = intent?.extras?.getInt(ProjectionMode::class.java.canonicalName)
+                ?: PROJECTION_MODE_SPHERE
 
-        vrLibrary?.switchDisplayMode(this, intent?.extras?.getInt(MDVRLibrary::class.java.canonicalName)
-                ?: MDVRLibrary.PROJECTION_MODE_SPHERE)
-
-        motionSwitch.setOnCheckedChangeListener { _, isChecked -> vrLibrary?.switchInteractiveMode(this, if (isChecked) MDVRLibrary.INTERACTIVE_MODE_MOTION_WITH_TOUCH else MDVRLibrary.INTERACTIVE_MODE_TOUCH) }
-
-        motionSwitch.isChecked = intent?.extras?.getBoolean(ThreeHundredSixtyPlayer.MOTION) ?: false
-
-        vrLibrary?.notifyPlayerChanged()
+        threeHundredSixtyView.interactionMode = intent?.extras?.getInt(InteractionMode::class.java.canonicalName)
+                ?: INTERACTIVE_MODE_MOTION_WITH_TOUCH
     }
 
-    private fun initVRLibrary() {
-        // new instance
-        vrLibrary = MDVRLibrary.with(this)
-                .displayMode(MDVRLibrary.DISPLAY_MODE_NORMAL)
-                .interactiveMode(MDVRLibrary.INTERACTIVE_MODE_TOUCH)
-                .pinchEnabled(true)
-                .asBitmap { callback -> loadImage(uri, callback) }
-                .build(glView)
-    }
+    class Builder private constructor() {
 
-    private var target: Target? = null
+        private lateinit var context: WeakReference<Context>
 
-    private fun loadImage(uri: Uri?, callback: MD360BitmapTexture.Callback) {
-        target = object : Target {
-            override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
-            }
+        private var uri: Uri? = null
 
-            override fun onBitmapFailed(errorDrawable: Drawable?) {
-            }
+        @InteractionMode
+        private var interactiveMode: Int = INTERACTIVE_MODE_MOTION_WITH_TOUCH
 
-            override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
-                Log.d(TAG, "loaded image, size:" + bitmap?.width + "," + bitmap?.height)
+        @ProjectionMode
+        private var projectionMode: Int = PROJECTION_MODE_SPHERE
 
-                // notify if size changed
-                vrLibrary?.onTextureResize(bitmap?.width?.toFloat() ?: 0f, bitmap?.height?.toFloat()
-                        ?: 0f)
-
-                // texture
-                callback.texture(bitmap)
-                cancelBusy()
-            }
+        fun interactiveMode(@InteractionMode interactiveMode: Int): Builder {
+            this.interactiveMode = interactiveMode
+            return this
         }
 
-        Log.d(TAG, "Load $uri with GL_MAX_TEXTURE_SIZE size:${callback.maxTextureSize}")
+        fun projectMode(@ProjectionMode projectionMode: Int): Builder {
+            this.projectionMode = projectionMode
+            return this
+        }
 
-        Picasso.with(applicationContext)
-                .load(uri ?: return)
-                .resize(callback.maxTextureSize, callback.maxTextureSize)
-                .onlyScaleDown()
-                .centerInside()
-                .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
-                .into(target)
-    }
+        fun startActivity() = context.get()!!.startActivity(Intent(context.get(), ThreeHundredSixtyPlayerActivity::class.java)
+                .apply {
+                    putExtra(Uri::class.java.canonicalName, uri.toString())
+                    putExtra(ProjectionMode::class.java.canonicalName, projectionMode)
+                    putExtra(InteractionMode::class.java.canonicalName, interactiveMode)
+                })
 
-    private val TAG = this::class.java.simpleName
-
-    private fun cancelBusy() {
-        progress.visibility = View.GONE
-    }
-
-    private fun busy() {
-        progress.visibility = View.VISIBLE
-    }
-
-    override fun onResume() {
-        super.onResume()
-        vrLibrary?.onResume(this)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        vrLibrary?.onPause(this)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        vrLibrary?.onDestroy()
-    }
-
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-        vrLibrary?.onOrientationChanged(this)
+        companion object {
+            fun with(context: Context): Builder = Builder().also { it.context = WeakReference(context) }
+        }
     }
 }
-

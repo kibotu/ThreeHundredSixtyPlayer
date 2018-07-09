@@ -1,0 +1,10 @@
+package com.exozet.threehundredsixty.player
+
+import androidx.annotation.IntDef
+import com.exozet.threehundredsixty.player.ThreeHundredSixtyPlayer.Companion.INTERACTIVE_MODE_MOTION
+import com.exozet.threehundredsixty.player.ThreeHundredSixtyPlayer.Companion.INTERACTIVE_MODE_MOTION_WITH_TOUCH
+import com.exozet.threehundredsixty.player.ThreeHundredSixtyPlayer.Companion.INTERACTIVE_MODE_TOUCH
+
+@IntDef(INTERACTIVE_MODE_TOUCH, INTERACTIVE_MODE_MOTION, INTERACTIVE_MODE_MOTION_WITH_TOUCH)
+@Retention(AnnotationRetention.SOURCE)
+annotation class InteractionMode
