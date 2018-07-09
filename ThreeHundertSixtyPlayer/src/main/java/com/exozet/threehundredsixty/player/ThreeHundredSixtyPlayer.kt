@@ -12,7 +12,6 @@ import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.asha.vrlib.MDVRLibrary
 import com.asha.vrlib.texture.MD360BitmapTexture
-import com.exozet.parseFile
 import com.squareup.picasso.MemoryPolicy
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
