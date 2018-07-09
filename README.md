@@ -87,6 +87,7 @@ Player will log max supported texture size during surface view creation. Look ou
     
 # Changelog
 
+* Supports being added as custom view
 * Supports showing controls
 * Supports motion configuration
 * Supports motion sensors
