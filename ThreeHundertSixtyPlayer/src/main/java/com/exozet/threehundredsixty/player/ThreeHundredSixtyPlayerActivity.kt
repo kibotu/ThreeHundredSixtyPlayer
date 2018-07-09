@@ -4,11 +4,10 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.text.TextUtils.isEmpty
 import androidx.appcompat.app.AppCompatActivity
-import com.exozet.parseAssetFile
 import com.exozet.threehundredsixty.player.ThreeHundredSixtyPlayer.Companion.INTERACTIVE_MODE_MOTION_WITH_TOUCH
 import com.exozet.threehundredsixty.player.ThreeHundredSixtyPlayer.Companion.PROJECTION_MODE_SPHERE
+import com.exozet.threehundredsixty.player.ThreeHundredSixtyPlayer.Companion.SHOW_CONTROLS
 import kotlinx.android.synthetic.main.activity_threehundredsixty_player.*
 import java.lang.ref.WeakReference
 
@@ -19,13 +18,15 @@ class ThreeHundredSixtyPlayerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_threehundredsixty_player)
 
-        val file = intent?.extras?.getString(Uri::class.java.canonicalName)
-        if (isEmpty(file)) {
+        val file: Uri? = intent?.extras?.getParcelable(Uri::class.java.canonicalName)
+        if (file == null) {
             finish()
             return
         }
 
-        threeHundredSixtyView.uri = parseAssetFile(file!!)
+        threeHundredSixtyView.uri = file
+
+        threeHundredSixtyView.showControls = intent?.extras?.getBoolean(SHOW_CONTROLS) ?: false
 
         threeHundredSixtyView.projectionMode = intent?.extras?.getInt(ProjectionMode::class.java.canonicalName)
                 ?: PROJECTION_MODE_SPHERE
@@ -40,11 +41,18 @@ class ThreeHundredSixtyPlayerActivity : AppCompatActivity() {
 
         private var uri: Uri? = null
 
+        private var showControls: Boolean = false
+
         @InteractionMode
         private var interactiveMode: Int = INTERACTIVE_MODE_MOTION_WITH_TOUCH
 
         @ProjectionMode
         private var projectionMode: Int = PROJECTION_MODE_SPHERE
+
+        fun showControls(showControls: Boolean = true): Builder {
+            this.showControls = showControls
+            return this
+        }
 
         fun uri(uri: Uri): Builder {
             this.uri = uri
@@ -63,9 +71,10 @@ class ThreeHundredSixtyPlayerActivity : AppCompatActivity() {
 
         fun startActivity() = context.get()!!.startActivity(Intent(context.get(), ThreeHundredSixtyPlayerActivity::class.java)
                 .apply {
-                    putExtra(Uri::class.java.canonicalName, uri.toString())
+                    putExtra(Uri::class.java.canonicalName, uri)
                     putExtra(ProjectionMode::class.java.canonicalName, projectionMode)
                     putExtra(InteractionMode::class.java.canonicalName, interactiveMode)
+                    putExtra(SHOW_CONTROLS, showControls)
                 })
 
         companion object {

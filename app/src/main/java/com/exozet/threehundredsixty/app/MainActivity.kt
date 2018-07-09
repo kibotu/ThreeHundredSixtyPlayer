@@ -2,12 +2,17 @@ package com.exozet.threehundredsixty.app
 
 import android.Manifest
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import com.exozet.parseAssetFile
+import com.exozet.parseExternalStorageFile
+import com.exozet.parseFile
+import com.exozet.parseInternalStorageFile
 import com.exozet.threehundredsixty.player.ThreeHundredSixtyPlayer
+import com.exozet.threehundredsixty.player.ThreeHundredSixtyPlayerActivity
 import com.google.android.material.snackbar.Snackbar
 import com.tbruyelle.rxpermissions2.RxPermissions
 import kotlinx.android.synthetic.main.activity_main.*
-import com.exozet.parseAssetFile
 
 class MainActivity : AppCompatActivity() {
 
@@ -15,8 +20,19 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // loadFromAssets()
-        load()
+        // internal=/data/user/0/com.exozet.threehundertsixty.app/files/myfile.jpg
+        // assets= file:///android_asset/myfile.jpg
+        // external=/storage/emulated/0/myfile.jpg
+        // file=file:///myfile.jpg
+        Log.v("MainActivity",
+                "internal=${parseInternalStorageFile(this, "myfile.jpg")}" +
+                        " assets= ${parseAssetFile("myfile.jpg")}" +
+                        " external=${parseExternalStorageFile("myfile.jpg")}" +
+                        " file=${parseFile("myfile.jpg")}" +
+                        "")
+
+        loadFromAssets()
+//        load()
     }
 
     private fun load() =
@@ -24,9 +40,10 @@ class MainActivity : AppCompatActivity() {
                 if (granted) { // Always true pre-M
                     ThreeHundredSixtyPlayerActivity.Builder
                             .with(this)
-                            .uri(parseExternalStorage("/DCIM/large.jpg"))
+                            .uri(parseExternalStorageFile("DCIM/large.jpg"))
                             .projectMode(ThreeHundredSixtyPlayer.PROJECTION_MODE_SPHERE)
                             .interactiveMode(ThreeHundredSixtyPlayer.INTERACTIVE_MODE_TOUCH)
+                            .showControls()
                             .startActivity()
                     finish()
                 } else {
@@ -38,6 +55,7 @@ class MainActivity : AppCompatActivity() {
         ThreeHundredSixtyPlayerActivity.Builder
                 .with(this)
                 .uri(parseAssetFile("large.jpg"))
+                .showControls(false)
                 .projectMode(ThreeHundredSixtyPlayer.PROJECTION_MODE_SPHERE)
                 .interactiveMode(ThreeHundredSixtyPlayer.INTERACTIVE_MODE_TOUCH)
                 .startActivity()

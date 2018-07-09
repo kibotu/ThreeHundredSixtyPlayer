@@ -12,6 +12,7 @@ import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.asha.vrlib.MDVRLibrary
 import com.asha.vrlib.texture.MD360BitmapTexture
+import com.exozet.parseFile
 import com.squareup.picasso.MemoryPolicy
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
@@ -40,7 +41,12 @@ class ThreeHundredSixtyPlayer @JvmOverloads constructor(
         set(value) {
             if (field == value)
                 return
-            field = value
+
+            field = if (value.toString().startsWith("file:///"))
+                value
+            else
+                parseFile(value.toString())
+
             vrLibrary?.notifyPlayerChanged()
         }
 
@@ -61,6 +67,12 @@ class ThreeHundredSixtyPlayer @JvmOverloads constructor(
             vrLibrary?.notifyPlayerChanged()
         }
 
+    var showControls: Boolean = false
+        set(value) {
+            field = value
+            motionSwitch.goneUnless(!value)
+        }
+
     init {
         val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         inflater.inflate(R.layout.threehundredsixty_view, this, true)
@@ -68,7 +80,7 @@ class ThreeHundredSixtyPlayer @JvmOverloads constructor(
 
     private fun initVRLibrary() {
         vrLibrary = MDVRLibrary.with(context)
-                .displayMode(MDVRLibrary.DISPLAY_MODE_NORMAL)
+                .displayMode(projectionMode)
                 .interactiveMode(interactionMode)
                 .pinchEnabled(true)
                 .asBitmap { callback -> loadImage(uri, callback) }
@@ -168,5 +180,10 @@ class ThreeHundredSixtyPlayer @JvmOverloads constructor(
         const val INTERACTIVE_MODE_TOUCH = MDVRLibrary.INTERACTIVE_MODE_TOUCH
         const val INTERACTIVE_MODE_MOTION = MDVRLibrary.INTERACTIVE_MODE_MOTION
         const val INTERACTIVE_MODE_MOTION_WITH_TOUCH = MDVRLibrary.INTERACTIVE_MODE_MOTION_WITH_TOUCH
+        internal const val SHOW_CONTROLS = "SHOW_CONTROLS"
+
+        internal fun View.goneUnless(isGone: Boolean = true) {
+            visibility = if (isGone) View.GONE else View.VISIBLE
+        }
     }
 }
