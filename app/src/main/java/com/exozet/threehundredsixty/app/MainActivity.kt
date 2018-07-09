@@ -7,6 +7,7 @@ import com.exozet.threehundredsixty.player.ThreeHundredSixtyPlayer
 import com.google.android.material.snackbar.Snackbar
 import com.tbruyelle.rxpermissions2.RxPermissions
 import kotlinx.android.synthetic.main.activity_main.*
+import com.exozet.parseAssetFile
 
 class MainActivity : AppCompatActivity() {
 
@@ -21,13 +22,11 @@ class MainActivity : AppCompatActivity() {
     private fun load() =
             RxPermissions(this).request(Manifest.permission.READ_EXTERNAL_STORAGE).subscribe { granted ->
                 if (granted) { // Always true pre-M
-                    ThreeHundredSixtyPlayer
+                    ThreeHundredSixtyPlayerActivity.Builder
                             .with(this)
-                            // .projectMode(ThreeHundredSixtyPlayer.PROJECTION_MODE_MULTI_FISH_EYE_HORIZONTAL)
-                            // .file("${Environment.getExternalStorageDirectory()}/DCIM/large.jpg")
-                            // .internalStorageFile("/cache/large.jpg")
-                            // .assetFile("large.png")
-                            .externalStorageFile("/DCIM/large.jpg")
+                            .uri(parseExternalStorage("/DCIM/large.jpg"))
+                            .projectMode(ThreeHundredSixtyPlayer.PROJECTION_MODE_SPHERE)
+                            .interactiveMode(ThreeHundredSixtyPlayer.INTERACTIVE_MODE_TOUCH)
                             .startActivity()
                     finish()
                 } else {
@@ -36,9 +35,11 @@ class MainActivity : AppCompatActivity() {
             }
 
     private fun loadFromAssets() {
-        ThreeHundredSixtyPlayer
+        ThreeHundredSixtyPlayerActivity.Builder
                 .with(this)
-                .assetFile("large.png")
+                .uri(parseAssetFile("large.jpg"))
+                .projectMode(ThreeHundredSixtyPlayer.PROJECTION_MODE_SPHERE)
+                .interactiveMode(ThreeHundredSixtyPlayer.INTERACTIVE_MODE_TOUCH)
                 .startActivity()
         finish()
     }

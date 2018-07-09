@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.activity_threehundredsixty_player.*
 import java.lang.ref.WeakReference
 
 
-internal class ThreeHundredSixtyPlayerActivity : AppCompatActivity() {
+class ThreeHundredSixtyPlayerActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,6 +45,11 @@ internal class ThreeHundredSixtyPlayerActivity : AppCompatActivity() {
 
         @ProjectionMode
         private var projectionMode: Int = PROJECTION_MODE_SPHERE
+
+        fun uri(uri: Uri): Builder {
+            this.uri = uri
+            return this
+        }
 
         fun interactiveMode(@InteractionMode interactiveMode: Int): Builder {
             this.interactiveMode = interactiveMode

@@ -70,12 +70,12 @@ class ThreeHundredSixtyPlayer @JvmOverloads constructor(
                 .build(glView)
     }
 
-    fun onCreate() {
+    private fun onCreate() {
         initVRLibrary()
         motionSwitch.setOnCheckedChangeListener { _, isChecked -> interactionMode = if (isChecked) INTERACTIVE_MODE_MOTION_WITH_TOUCH else INTERACTIVE_MODE_TOUCH }
     }
 
-    fun busy() {
+    private fun busy() {
         progress.visibility = View.VISIBLE
     }
 
