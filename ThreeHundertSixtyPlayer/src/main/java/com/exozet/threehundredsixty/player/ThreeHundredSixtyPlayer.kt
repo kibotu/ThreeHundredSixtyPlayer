@@ -27,9 +27,14 @@ class ThreeHundredSixtyPlayer @JvmOverloads constructor(
 
     private val uuid: String by lazy { UUID.randomUUID().toString().take(8) }
 
+    private var vrLibrary: MDVRLibrary? = null
+
     var debug = true
 
-    private var vrLibrary: MDVRLibrary? = null
+    private fun log(message: String) {
+        if (debug)
+            Log.d(TAG, message)
+    }
 
     var uri: Uri? = null
         set(value) {
@@ -132,11 +137,6 @@ class ThreeHundredSixtyPlayer @JvmOverloads constructor(
                 .centerInside()
                 .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
                 .into(target)
-    }
-
-    private fun log(message: String) {
-        if (debug)
-            Log.d(TAG, message)
     }
 
     override fun onAttachedToWindow() {
