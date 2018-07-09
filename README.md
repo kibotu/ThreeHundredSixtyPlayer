@@ -6,19 +6,49 @@ Native OpenGLES 2.0 360 Degree Player
 
 # How to use
 
-Start 360 Degree Activity by passing bitmap file path for or an  bitmap
+## As view
 
-       ThreeHundredSixtyPlayer
-               .with(this)
-               // .projectMode(ThreeHundredSixtyPlayer.PROJECTION_MODE_MULTI_FISH_EYE_HORIZONTAL)
-               // .internalStorageFile("/cache/large.jpg")
-               // .assetFile("large.png")
-               // (Note you require [READ_EXTERNAL_STORAGE Permission](https://developer.android.com/reference/android/Manifest.permission.html#READ_EXTERNAL_STORAGE))
-               // .file("${Environment.getExternalStorageDirectory()}/DCIM/large.jpg") 
-               .externalStorageFile("/DCIM/large.jpg")
-               .motion() // default: false 
-               .startActivity() 
-     
+    <?xml version="1.0" encoding="utf-8"?>
+    <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/root"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    
+        <com.exozet.threehundredsixty.player.ThreeHundredSixtyPlayer
+            android:id="@+id/threeHundredSixtyView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+    
+    private fun startThreeHundredSixtyPlayer(filename: String) = with(threeHundredSixtyView) {
+        uri = parseAssetFile(filename)
+        projectionMode = ThreeHundredSixtyPlayer.PROJECTION_MODE_SPHERE
+        interactionMode = ThreeHundredSixtyPlayer.INTERACTIVE_MODE_MOTION_WITH_TOUCH
+        showControls = true
+    }
+
+## As Standalone Activity
+
+Start 360 Degree Activity by passing bitmap file path for or an  bitmap
+               
+       ThreeHundredSixtyPlayerActivity.Builder
+                .with(this)
+                // (Note you require [READ_EXTERNAL_STORAGE Permission](https://developer.android.com/reference/android/Manifest.permission.html#READ_EXTERNAL_STORAGE))
+                //.uri(parseInternalStorageFile("large.jpg"))
+                .uri(parseAssetFile("large.jpg"))
+                //.uri(parseExternalStorageFile("large.jpg"))
+                //.uri(parseFile("large.jpg")) 
+                .showControls() // default: false 
+                .projectMode(ThreeHundredSixtyPlayer.PROJECTION_MODE_SPHERE) // default: PROJECTION_MODE_SPHERE
+                .interactiveMode(ThreeHundredSixtyPlayer.INTERACTIVE_MODE_TOUCH) // default: INTERACTIVE_MODE_MOTION_WITH_TOUCH
+                .startActivity()
+
 ## Projection Modes
 
 #### [Equirectangular](https://developers.theta360.com/en/docs/introduction/)
@@ -34,6 +64,12 @@ Start 360 Degree Activity by passing bitmap file path for or an  bitmap
 
     ThreeHundredSixtyPlayer.with(this)
         .projectMode(ThreeHundredSixtyPlayer.PROJECTION_MODE_MULTI_FISH_EYE_HORIZONTAL) // or veritcal: PROJECTION_MODE_MULTI_FISH_EYE_VERTICAL
+
+## Interaction Modes
+
+* INTERACTIVE_MODE_TOUCH - Swipe Gestures
+* INTERACTIVE_MODE_MOTION - Motion Sensors
+* INTERACTIVE_MODE_MOTION_WITH_TOUCH - Both combined
 
 # How to install (tbd)
 
@@ -51,6 +87,7 @@ Player will log max supported texture size during surface view creation. Look ou
     
 # Changelog
 
+* Supports showing controls
 * Supports motion configuration
 * Supports motion sensors
 * Supports swiping 
