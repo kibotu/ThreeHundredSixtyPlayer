@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity() {
         ThreeHundredSixtyPlayerActivity.Builder
                 .with(this)
                 .uri(parseAssetFile("large.jpg"))
-                .showControls(false)
+                .showControls()
                 .projectMode(ThreeHundredSixtyPlayer.PROJECTION_MODE_SPHERE)
                 .interactiveMode(ThreeHundredSixtyPlayer.INTERACTIVE_MODE_TOUCH)
                 .startActivity()
