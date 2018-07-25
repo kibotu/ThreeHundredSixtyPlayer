@@ -29,6 +29,8 @@ class ThreeHundredSixtyPlayer @JvmOverloads constructor(
 
     private var vrLibrary: MDVRLibrary? = null
 
+    var onCameraRotation: ((pitch: Float, yaw: Float, roll: Float) -> Unit)? = null
+
     var debug = true
 
     private fun log(message: String) {
@@ -77,6 +79,10 @@ class ThreeHundredSixtyPlayer @JvmOverloads constructor(
         inflater.inflate(R.layout.threehundredsixty_view, this, true)
     }
 
+    private var pitch = 0f
+    private var yaw = 0f
+    private var roll = 0f
+
     private fun initVRLibrary() {
         vrLibrary = MDVRLibrary.with(context)
                 .displayMode(projectionMode)
@@ -84,6 +90,26 @@ class ThreeHundredSixtyPlayer @JvmOverloads constructor(
                 .pinchEnabled(true)
                 .asBitmap { callback -> loadImage(uri, callback) }
                 .build(glView)
+
+        vrLibrary?.setDirectorFilter(object : MDVRLibrary.IDirectorFilter {
+            override fun onFilterPitch(p0: Float): Float {
+                pitch = p0
+                onCameraRotation?.invoke(pitch, yaw, roll)
+                return p0
+            }
+
+            override fun onFilterYaw(p0: Float): Float {
+                yaw = p0
+                onCameraRotation?.invoke(pitch, yaw, roll)
+                return p0
+            }
+
+            override fun onFilterRoll(p0: Float): Float {
+                roll = p0
+                onCameraRotation?.invoke(pitch, yaw, roll)
+                return p0
+            }
+        })
     }
 
     private fun onCreate() {
