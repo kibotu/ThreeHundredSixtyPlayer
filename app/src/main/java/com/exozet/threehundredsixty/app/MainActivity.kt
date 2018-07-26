@@ -49,7 +49,7 @@ class MainActivity : AppCompatActivity() {
     private fun loadFromAssets() {
         ThreeHundredSixtyPlayerActivity.Builder
                 .with(this)
-                .uri(parseAssetFile("large.jpg"))
+                .uri(parseAssetFile("interior_example.jpg"))
                 .showControls()
                 .projectMode(ThreeHundredSixtyPlayer.PROJECTION_MODE_SPHERE)
                 .interactiveMode(ThreeHundredSixtyPlayer.INTERACTIVE_MODE_TOUCH)
