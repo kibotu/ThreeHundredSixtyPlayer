@@ -11,7 +11,6 @@ import android.view.LayoutInflater
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.asha.vrlib.MDVRLibrary
-import com.asha.vrlib.texture.MD360BitmapTexture
 import com.squareup.picasso.MemoryPolicy
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
@@ -94,32 +93,49 @@ class ThreeHundredSixtyPlayer @JvmOverloads constructor(
             return
         }
 
-        vrLibrary = MDVRLibrary.with(context)
-                .displayMode(projectionMode)
-                .interactiveMode(interactionMode)
-                .pinchEnabled(true)
-                .asBitmap { callback -> loadImage(uri, callback) }
-                .build(glView)
+        log("uri=$uri")
 
-        vrLibrary?.setDirectorFilter(object : MDVRLibrary.IDirectorFilter {
-            override fun onFilterPitch(p0: Float): Float {
-                pitch = p0
-                onCameraRotation?.invoke(pitch, yaw, roll)
-                return p0
-            }
+        loadImage(uri) { bitmap ->
 
-            override fun onFilterYaw(p0: Float): Float {
-                yaw = p0
-                onCameraRotation?.invoke(pitch, yaw, roll)
-                return p0
-            }
+            vrLibrary = MDVRLibrary.with(context)
+                    .displayMode(projectionMode)
+                    .interactiveMode(interactionMode)
+                    .pinchEnabled(true)
+                    .asBitmap {
 
-            override fun onFilterRoll(p0: Float): Float {
-                roll = p0
-                onCameraRotation?.invoke(pitch, yaw, roll)
-                return p0
-            }
-        })
+                        it.texture(bitmap)
+
+                        vrLibrary?.onTextureResize(bitmap?.width?.toFloat()
+                                ?: width.toFloat(), bitmap?.height?.toFloat() ?: height.toFloat())
+
+                        vrLibrary?.onResume(context)
+
+                        cancelBusy()
+                    }
+                    .build(glView)
+
+            vrLibrary?.setDirectorFilter(object : MDVRLibrary.IDirectorFilter {
+                override fun onFilterPitch(p0: Float): Float {
+                    pitch = p0
+                    onCameraRotation?.invoke(pitch, yaw, roll)
+                    return p0
+                }
+
+                override fun onFilterYaw(p0: Float): Float {
+                    yaw = p0
+                    onCameraRotation?.invoke(pitch, yaw, roll)
+                    return p0
+                }
+
+                override fun onFilterRoll(p0: Float): Float {
+                    roll = p0
+                    onCameraRotation?.invoke(pitch, yaw, roll)
+                    return p0
+                }
+            })
+
+            glView.visibility = View.VISIBLE
+        }
     }
 
     private fun onCreate() {
@@ -144,8 +160,6 @@ class ThreeHundredSixtyPlayer @JvmOverloads constructor(
                     uri = Uri.parse(it.imageMedia?.publicUrls?.default_admin_hd)
 
                     initVRLibrary()
-
-                    cancelBusy()
 
                 }, { t ->
                     Log.e(TAG, t.message)
@@ -181,7 +195,7 @@ class ThreeHundredSixtyPlayer @JvmOverloads constructor(
 
     private var target: Target? = null
 
-    private fun loadImage(uri: Uri?, callback: MD360BitmapTexture.Callback) {
+    private fun loadImage(uri: Uri?, block: (bitmap: Bitmap?) -> Unit) {
         target = object : Target {
             override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
             }
@@ -191,22 +205,14 @@ class ThreeHundredSixtyPlayer @JvmOverloads constructor(
 
             override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
                 log("loaded image, size:" + bitmap?.width + "," + bitmap?.height)
-
-                // notify if size changed
-                vrLibrary?.onTextureResize(bitmap?.width?.toFloat() ?: 0f, bitmap?.height?.toFloat()
-                        ?: 0f)
-
                 // texture
-                callback.texture(bitmap)
-                cancelBusy()
+                block.invoke(bitmap)
             }
         }
 
-        log("Load $uri with GL_MAX_TEXTURE_SIZE size:${callback.maxTextureSize}")
-
         Picasso.with(context)
                 .load(uri ?: return)
-                .resize(callback.maxTextureSize, callback.maxTextureSize)
+                .resize(2048, 2048)
                 .onlyScaleDown()
                 .centerInside()
                 .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
