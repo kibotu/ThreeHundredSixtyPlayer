@@ -15,6 +15,8 @@ import com.asha.vrlib.texture.MD360BitmapTexture
 import com.squareup.picasso.MemoryPolicy
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.threehundredsixty_view.view.*
 import java.util.*
 
@@ -43,10 +45,12 @@ class ThreeHundredSixtyPlayer @JvmOverloads constructor(
             if (field == value)
                 return
 
-            field = if (value.toString().startsWith("file:///"))
-                value
-            else
-                parseFile(value.toString())
+            field = when {
+                value.toString().startsWith("http://") -> value
+                value.toString().startsWith("https://") -> value
+                value.toString().startsWith("file:///") -> value
+                else -> parseFile(value.toString())
+            }
 
             vrLibrary?.notifyPlayerChanged()
         }
@@ -84,6 +88,12 @@ class ThreeHundredSixtyPlayer @JvmOverloads constructor(
     private var roll = 0f
 
     private fun initVRLibrary() {
+
+        if (uri == null) {
+            Log.e(TAG, "Please provide com.exozet.freedomplayer.Parameter#threeHundredSixtyUri")
+            return
+        }
+
         vrLibrary = MDVRLibrary.with(context)
                 .displayMode(projectionMode)
                 .interactiveMode(interactionMode)
@@ -113,8 +123,35 @@ class ThreeHundredSixtyPlayer @JvmOverloads constructor(
     }
 
     private fun onCreate() {
-        initVRLibrary()
+        when {
+            uri.toString().startsWith("http://") -> loadJson()
+            uri.toString().startsWith("https://") -> loadJson()
+            else -> initVRLibrary()
+        }
         motionSwitch.setOnCheckedChangeListener { _, isChecked -> interactionMode = if (isChecked) INTERACTIVE_MODE_MOTION_WITH_TOUCH else INTERACTIVE_MODE_TOUCH }
+    }
+
+    private fun loadJson() {
+
+        busy()
+
+        RequestProvider.exteriorJson(uri!!).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+
+                    Log.v(TAG, "exterior=$it")
+
+                    uri = Uri.parse(it.imageMedia?.publicUrls?.default_admin_hd)
+
+                    initVRLibrary()
+
+                    cancelBusy()
+
+                }, { t ->
+                    Log.e(TAG, t.message)
+                    t.printStackTrace()
+                    cancelBusy()
+                })
     }
 
     private fun busy() {
