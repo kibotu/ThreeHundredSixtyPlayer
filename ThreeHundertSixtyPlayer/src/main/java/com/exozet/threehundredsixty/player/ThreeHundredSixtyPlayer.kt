@@ -51,7 +51,7 @@ class ThreeHundredSixtyPlayer @JvmOverloads constructor(
                 else -> parseFile(value.toString())
             }
 
-            if (vrLibrary == null && (value.toString().startsWith("http://") || value.toString().startsWith("https://")))
+            if (vrLibrary == null)
                 initVRLibrary()
 
             vrLibrary?.notifyPlayerChanged()
@@ -142,7 +142,6 @@ class ThreeHundredSixtyPlayer @JvmOverloads constructor(
     }
 
     private fun onCreate() {
-        initVRLibrary()
         motionSwitch.setOnCheckedChangeListener { _, isChecked -> interactionMode = if (isChecked) INTERACTIVE_MODE_MOTION_WITH_TOUCH else INTERACTIVE_MODE_TOUCH }
     }
 
