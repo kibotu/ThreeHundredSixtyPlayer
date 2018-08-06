@@ -34,9 +34,9 @@ class ThreeHundredSixtyPlayer @JvmOverloads constructor(
 
     var debug = true
 
-    private fun log(message: String) {
+    private fun log(message: String?) {
         if (debug)
-            Log.d(TAG, message)
+            Log.d(TAG, message ?: "")
     }
 
     var uri: Uri? = null
