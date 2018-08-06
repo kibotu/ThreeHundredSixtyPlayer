@@ -3,7 +3,6 @@ package com.exozet.threehundredsixty.player
 import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.util.AttributeSet
 import android.util.Log
@@ -11,11 +10,12 @@ import android.view.LayoutInflater
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.asha.vrlib.MDVRLibrary
-import com.squareup.picasso.MemoryPolicy
-import com.squareup.picasso.Picasso
-import com.squareup.picasso.Target
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+import com.bumptech.glide.Glide
+import com.bumptech.glide.Priority
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.request.target.SimpleTarget
+import com.bumptech.glide.request.transition.Transition
 import kotlinx.android.synthetic.main.threehundredsixty_view.view.*
 import java.util.*
 
@@ -50,6 +50,9 @@ class ThreeHundredSixtyPlayer @JvmOverloads constructor(
                 value.toString().startsWith("file:///") -> value
                 else -> parseFile(value.toString())
             }
+
+            if (vrLibrary == null && (value.toString().startsWith("http://") || value.toString().startsWith("https://")))
+                initVRLibrary()
 
             vrLibrary?.notifyPlayerChanged()
         }
@@ -139,33 +142,8 @@ class ThreeHundredSixtyPlayer @JvmOverloads constructor(
     }
 
     private fun onCreate() {
-        when {
-            uri.toString().startsWith("http://") -> loadJson()
-            uri.toString().startsWith("https://") -> loadJson()
-            else -> initVRLibrary()
-        }
+        initVRLibrary()
         motionSwitch.setOnCheckedChangeListener { _, isChecked -> interactionMode = if (isChecked) INTERACTIVE_MODE_MOTION_WITH_TOUCH else INTERACTIVE_MODE_TOUCH }
-    }
-
-    private fun loadJson() {
-
-        busy()
-
-        RequestProvider.exteriorJson(uri!!).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-
-                    Log.v(TAG, "exterior=$it")
-
-                    uri = Uri.parse(it.imageMedia?.publicUrls?.default_admin_hd)
-
-                    initVRLibrary()
-
-                }, { t ->
-                    Log.e(TAG, t.message)
-                    t.printStackTrace()
-                    cancelBusy()
-                })
     }
 
     private fun busy() {
@@ -193,30 +171,23 @@ class ThreeHundredSixtyPlayer @JvmOverloads constructor(
         vrLibrary?.onOrientationChanged(context)
     }
 
-    private var target: Target? = null
-
     private fun loadImage(uri: Uri?, block: (bitmap: Bitmap?) -> Unit) {
-        target = object : Target {
-            override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
-            }
 
-            override fun onBitmapFailed(errorDrawable: Drawable?) {
-            }
-
-            override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
-                log("loaded image, size:" + bitmap?.width + "," + bitmap?.height)
-                // texture
-                block.invoke(bitmap)
-            }
-        }
-
-        Picasso.with(context)
-                .load(uri ?: return)
-                .resize(2048, 2048)
-                .onlyScaleDown()
-                .centerInside()
-                .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
-                .into(target)
+        Glide.with(this)
+                .asBitmap()
+                .load(uri)
+                .apply(RequestOptions
+                        .fitCenterTransform()
+                        .priority(Priority.HIGH)
+                        .dontAnimate()
+                        .skipMemoryCache(false)
+                        .override(2048, 2048)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL))
+                .into(object : SimpleTarget<Bitmap>() {
+                    override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                        block(resource)
+                    }
+                })
     }
 
     override fun onAttachedToWindow() {
