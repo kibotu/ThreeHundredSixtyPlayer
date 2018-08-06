@@ -32,7 +32,7 @@ class ThreeHundredSixtyPlayer @JvmOverloads constructor(
 
     var onCameraRotation: ((pitch: Float, yaw: Float, roll: Float) -> Unit)? = null
 
-    var debug = true
+    var debug = false
 
     private fun log(message: String?) {
         if (debug)
