@@ -142,8 +142,9 @@ dependencies {
     debugImplementation libs.leakcanaryDebugSupportFragments
     releaseImplementation libs.leakcanaryRelease
 
-    implementation 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.5@aar'
-    implementation 'com.github.akarnokd:rxjava2-interop:0.8.0'
+    implementation libs.rxpermissions
+    implementation libs.rxjava2Interop
+
     api project(':ThreeHundertSixtyPlayer')
 }
 

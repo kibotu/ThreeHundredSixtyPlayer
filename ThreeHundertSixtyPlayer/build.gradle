@@ -119,9 +119,8 @@ dependencies {
     implementation libs.rx2Android
     implementation libs.rx2Kotlin
     implementation libs.glide
-    annotationProcessor libs.glideAnnotationsProcessor
-
-    implementation 'com.github.ashqal:MD360Player4Android:2.5.0'
+    kapt libs.glideAnnotationsProcessor
+    implementation libs.md360Player
 }
 
 // region dexcount
