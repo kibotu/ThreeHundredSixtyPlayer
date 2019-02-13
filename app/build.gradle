@@ -143,7 +143,7 @@ dependencies {
     releaseImplementation libs.leakcanaryRelease
 
     implementation libs.rxpermissions
-    implementation libs.rxjava2Interop
+    implementation libs.rx2java
 
     api project(':ThreeHundertSixtyPlayer')
 }

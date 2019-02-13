@@ -19,41 +19,47 @@ class MainActivity : AppCompatActivity() {
         // assets= file:///android_asset/myfile.jpg
         // external=/storage/emulated/0/myfile.jpg
         // file=file:///myfile.jpg
-        Log.v("MainActivity",
-                "internal=${parseInternalStorageFile(this, "myfile.jpg")}" +
-                        " assets= ${parseAssetFile("myfile.jpg")}" +
-                        " external=${parseExternalStorageFile("myfile.jpg")}" +
-                        " file=${parseFile("myfile.jpg")}" +
-                        "")
+        Log.v(
+            "MainActivity",
+            "internal=${parseInternalStorageFile(this, "myfile.jpg")}" +
+                    " assets= ${parseAssetFile("myfile.jpg")}" +
+                    " external=${parseExternalStorageFile("myfile.jpg")}" +
+                    " file=${parseFile("myfile.jpg")}" +
+                    ""
+        )
 
         loadFromAssets()
 //        load()
     }
 
     private fun load() =
-            RxPermissions(this).request(Manifest.permission.READ_EXTERNAL_STORAGE).subscribe { granted ->
+        RxPermissions(this).request(Manifest.permission.READ_EXTERNAL_STORAGE)
+            .subscribe({ granted ->
                 if (granted) { // Always true pre-M
                     ThreeHundredSixtyPlayerActivity.Builder
-                            .with(this)
-                            .uri(parseExternalStorageFile("DCIM/large.jpg"))
-                            .projectMode(ThreeHundredSixtyPlayer.PROJECTION_MODE_SPHERE)
-                            .interactiveMode(ThreeHundredSixtyPlayer.INTERACTIVE_MODE_TOUCH)
-                            .showControls()
-                            .startActivity()
+                        .with(this)
+                        .uri(parseExternalStorageFile("DCIM/large.jpg"))
+                        .projectMode(ThreeHundredSixtyPlayer.PROJECTION_MODE_SPHERE)
+                        .interactiveMode(ThreeHundredSixtyPlayer.INTERACTIVE_MODE_TOUCH)
+                        .showControls()
+                        .startActivity()
                     finish()
                 } else {
                     Snackbar.make(root, "READ_EXTERNAL_STORAGE was not granted. :/", Snackbar.LENGTH_LONG).show()
                 }
-            }
+
+            }, {
+                it.printStackTrace()
+            })
 
     private fun loadFromAssets() {
         ThreeHundredSixtyPlayerActivity.Builder
-                .with(this)
-                .uri(parseAssetFile("interior_example.jpg"))
-                .showControls()
-                .projectMode(ThreeHundredSixtyPlayer.PROJECTION_MODE_SPHERE)
-                .interactiveMode(ThreeHundredSixtyPlayer.INTERACTIVE_MODE_TOUCH)
-                .startActivity()
+            .with(this)
+            .uri(parseAssetFile("interior_example.jpg"))
+            .showControls()
+            .projectMode(ThreeHundredSixtyPlayer.PROJECTION_MODE_SPHERE)
+            .interactiveMode(ThreeHundredSixtyPlayer.INTERACTIVE_MODE_TOUCH)
+            .startActivity()
         finish()
     }
 }
