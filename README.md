@@ -1,4 +1,4 @@
-# ThreeHundredSixtyPlayer [![API](https://img.shields.io/badge/API-15%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=17) [![Gradle Version](https://img.shields.io/badge/gradle-5.2.1-green.svg)](https://docs.gradle.org/current/release-notes)  [![Kotlin](https://img.shields.io/badge/kotlin-1.3.21-green.svg)](https://kotlinlang.org/)
+# ThreeHundredSixtyPlayer [![API](https://img.shields.io/badge/API-15%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=17) [![Gradle Version](https://img.shields.io/badge/gradle-5.2.1-green.svg)](https://docs.gradle.org/current/release-notes)  [![Kotlin](https://img.shields.io/badge/kotlin-1.3.21-green.svg)](https://kotlinlang.org/) [ ![Download](https://api.bintray.com/packages/exozetag/maven/Three-Hundred-Sixty/images/download.svg) ](https://bintray.com/exozetag/maven/Three-Hundred-Sixty/_latestVersion)
 
 Native OpenGLES 2.0 360 Degree Player
 
