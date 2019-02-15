@@ -22,7 +22,10 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".BitmapActivity" />
+        <activity
+            android:name=".BitmapActivity"
+            android:configChanges="screenSize|orientation"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" />
     </application>
 
 </manifest>

@@ -29,8 +29,8 @@ class MainActivity : AppCompatActivity() {
                         ""
         )
 
-//        loadFromAssets()
 //        load()
+//        loadFromAssets()
         loadRuntimeBitmaps()
     }
 

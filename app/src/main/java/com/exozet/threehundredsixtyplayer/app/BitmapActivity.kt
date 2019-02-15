@@ -24,6 +24,7 @@ class BitmapActivity : AppCompatActivity() {
 
         sample1.parseAssetFile().loadImage(this) {
             image1 = it
+            threeHundredSixtyView.bitmap = it
         }
 
         sample2.parseAssetFile().loadImage(this) {

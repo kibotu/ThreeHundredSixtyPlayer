@@ -48,24 +48,22 @@ class ThreeHundredSixtyPlayer @JvmOverloads constructor(
                 else -> value.toString().parseFile()
             }
 
-            if (vrLibrary == null)
-                initVRLibrary()
-
-            vrLibrary?.notifyPlayerChanged()
+            uri?.loadImage(context ?: return) { bitmap ->
+                this.bitmap = bitmap
+            }
         }
 
+    var bitmap: Bitmap? = null
+        set(value) {
+            field = value
+            vrLibrary?.notifyPlayerChanged()
+        }
 
     @ProjectionMode
     var projectionMode: Int = PROJECTION_MODE_SPHERE
         set(value) {
             field = value
             vrLibrary?.switchDisplayMode(context, projectionMode)
-            vrLibrary?.notifyPlayerChanged()
-        }
-
-    var bitmap: Bitmap? = null
-        set(value) {
-            field = value
             vrLibrary?.notifyPlayerChanged()
         }
 
@@ -97,6 +95,8 @@ class ThreeHundredSixtyPlayer @JvmOverloads constructor(
             a.recycle()
         } catch (ignore: Exception) {
         }
+
+        initVRLibrary()
     }
 
     private var pitch = 0f
@@ -120,48 +120,36 @@ class ThreeHundredSixtyPlayer @JvmOverloads constructor(
 
     private fun initVRLibrary() {
 
-        if (uri == null) {
-            Log.e(TAG, "Please provide com.exozet.freedomplayer.Parameter#threeHundredSixtyUri")
-            return
-        }
+        bitmapProvider = BitmapProvider(this)
 
-        log("uri=$uri")
+        vrLibrary = MDVRLibrary.with(context)
+                .displayMode(projectionMode)
+                .interactiveMode(interactionMode)
+                .pinchEnabled(true)
+                .asBitmap(bitmapProvider)
+                .build(glView)
 
-        uri?.loadImage(context) { bitmap ->
+        vrLibrary?.setDirectorFilter(object : MDVRLibrary.IDirectorFilter {
+            override fun onFilterPitch(p0: Float): Float {
+                pitch = p0
+                onCameraRotation?.invoke(pitch, yaw, roll)
+                return p0
+            }
 
-            this.bitmap = bitmap
+            override fun onFilterYaw(p0: Float): Float {
+                yaw = p0
+                onCameraRotation?.invoke(pitch, yaw, roll)
+                return p0
+            }
 
-            bitmapProvider = BitmapProvider(this)
+            override fun onFilterRoll(p0: Float): Float {
+                roll = p0
+                onCameraRotation?.invoke(pitch, yaw, roll)
+                return p0
+            }
+        })
 
-            vrLibrary = MDVRLibrary.with(context)
-                    .displayMode(projectionMode)
-                    .interactiveMode(interactionMode)
-                    .pinchEnabled(true)
-                    .asBitmap(bitmapProvider)
-                    .build(glView)
-
-            vrLibrary?.setDirectorFilter(object : MDVRLibrary.IDirectorFilter {
-                override fun onFilterPitch(p0: Float): Float {
-                    pitch = p0
-                    onCameraRotation?.invoke(pitch, yaw, roll)
-                    return p0
-                }
-
-                override fun onFilterYaw(p0: Float): Float {
-                    yaw = p0
-                    onCameraRotation?.invoke(pitch, yaw, roll)
-                    return p0
-                }
-
-                override fun onFilterRoll(p0: Float): Float {
-                    roll = p0
-                    onCameraRotation?.invoke(pitch, yaw, roll)
-                    return p0
-                }
-            })
-
-            glView.visibility = View.VISIBLE
-        }
+        glView.visibility = View.VISIBLE
     }
 
     private fun onCreate() {
