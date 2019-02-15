@@ -1,4 +1,4 @@
-package com.exozet.threehundredsixty.player
+package com.exozet.threehundredsixtyplayer
 
 import android.content.Context
 import android.content.res.Configuration
@@ -10,12 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.asha.vrlib.MDVRLibrary
-import com.bumptech.glide.Glide
-import com.bumptech.glide.Priority
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.request.RequestOptions
-import com.bumptech.glide.request.target.SimpleTarget
-import com.bumptech.glide.request.transition.Transition
+import com.asha.vrlib.texture.MD360BitmapTexture
 import kotlinx.android.synthetic.main.threehundredsixty_view.view.*
 import java.util.*
 
@@ -28,7 +23,7 @@ class ThreeHundredSixtyPlayer @JvmOverloads constructor(
 
     private val uuid: String by lazy { UUID.randomUUID().toString().take(8) }
 
-    private var vrLibrary: MDVRLibrary? = null
+    var vrLibrary: MDVRLibrary? = null
 
     var onCameraRotation: ((pitch: Float, yaw: Float, roll: Float) -> Unit)? = null
 
@@ -48,7 +43,7 @@ class ThreeHundredSixtyPlayer @JvmOverloads constructor(
                 value.toString().startsWith("http://") -> value
                 value.toString().startsWith("https://") -> value
                 value.toString().startsWith("file:///") -> value
-                else -> parseFile(value.toString())
+                else -> value.toString().parseFile()
             }
 
             if (vrLibrary == null)
@@ -56,6 +51,10 @@ class ThreeHundredSixtyPlayer @JvmOverloads constructor(
 
             vrLibrary?.notifyPlayerChanged()
         }
+
+    var bitmap: Bitmap? = null
+
+    var bitmapProvider: BitmapProvider? = null
 
     @ProjectionMode
     var projectionMode: Int = PROJECTION_MODE_SPHERE
@@ -83,11 +82,37 @@ class ThreeHundredSixtyPlayer @JvmOverloads constructor(
     init {
         val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         inflater.inflate(R.layout.threehundredsixty_view, this, true)
+
+        try {
+            val a = context.obtainStyledAttributes(attrs, R.styleable.ThreeHundredSixtyPlayer, defStyleAttr, 0)
+
+            projectionMode = a.getInt(R.styleable.ThreeHundredSixtyPlayer_projectionMode, 0)
+            interactionMode = a.getInt(R.styleable.ThreeHundredSixtyPlayer_interactionMode, 0)
+            showControls = a.getBoolean(R.styleable.ThreeHundredSixtyPlayer_showControls, false)
+
+            a.recycle()
+        } catch (ignore: Exception) {
+        }
     }
 
     private var pitch = 0f
     private var yaw = 0f
     private var roll = 0f
+
+    class BitmapProvider(var player: ThreeHundredSixtyPlayer) : MDVRLibrary.IBitmapProvider {
+
+        override fun onProvideBitmap(callback: MD360BitmapTexture.Callback?) = with(player) {
+            callback?.texture(bitmap)
+            vrLibrary?.onTextureResize(
+                    bitmap?.width?.toFloat() ?: width.toFloat(),
+                    bitmap?.height?.toFloat() ?: height.toFloat()
+            )
+
+            vrLibrary?.onResume(context)
+
+            cancelBusy()
+        }
+    }
 
     private fun initVRLibrary() {
 
@@ -98,23 +123,17 @@ class ThreeHundredSixtyPlayer @JvmOverloads constructor(
 
         log("uri=$uri")
 
-        loadImage(uri) { bitmap ->
+        uri?.loadImage(context) { bitmap ->
+
+            this.bitmap = bitmap
+
+            bitmapProvider = BitmapProvider(this)
 
             vrLibrary = MDVRLibrary.with(context)
                     .displayMode(projectionMode)
                     .interactiveMode(interactionMode)
                     .pinchEnabled(true)
-                    .asBitmap {
-
-                        it.texture(bitmap)
-
-                        vrLibrary?.onTextureResize(bitmap?.width?.toFloat()
-                                ?: width.toFloat(), bitmap?.height?.toFloat() ?: height.toFloat())
-
-                        vrLibrary?.onResume(context)
-
-                        cancelBusy()
-                    }
+                    .asBitmap(bitmapProvider)
                     .build(glView)
 
             vrLibrary?.setDirectorFilter(object : MDVRLibrary.IDirectorFilter {
@@ -142,7 +161,9 @@ class ThreeHundredSixtyPlayer @JvmOverloads constructor(
     }
 
     private fun onCreate() {
-        motionSwitch.setOnCheckedChangeListener { _, isChecked -> interactionMode = if (isChecked) INTERACTIVE_MODE_MOTION_WITH_TOUCH else INTERACTIVE_MODE_TOUCH }
+        motionSwitch.setOnCheckedChangeListener { _, isChecked ->
+            interactionMode = if (isChecked) INTERACTIVE_MODE_MOTION_WITH_TOUCH else INTERACTIVE_MODE_TOUCH
+        }
     }
 
     private fun busy() {
@@ -168,25 +189,6 @@ class ThreeHundredSixtyPlayer @JvmOverloads constructor(
     override fun onConfigurationChanged(newConfig: Configuration?) {
         super.onConfigurationChanged(newConfig)
         vrLibrary?.onOrientationChanged(context)
-    }
-
-    private fun loadImage(uri: Uri?, block: (bitmap: Bitmap?) -> Unit) {
-
-        Glide.with(this)
-                .asBitmap()
-                .load(uri)
-                .apply(RequestOptions
-                        .fitCenterTransform()
-                        .priority(Priority.HIGH)
-                        .dontAnimate()
-                        .skipMemoryCache(false)
-                        .override(2048, 2048)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL))
-                .into(object : SimpleTarget<Bitmap>() {
-                    override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                        block(resource)
-                    }
-                })
     }
 
     override fun onAttachedToWindow() {

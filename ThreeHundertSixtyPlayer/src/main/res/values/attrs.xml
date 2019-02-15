@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="ThreeHundredSixtyPlayer">
+        <attr name="projectionMode" format="enum">
+            <enum name="sphere" value="206" />
+            <enum name="dome180" value="202" />
+            <enum name="dome230" value="203" />
+            <enum name="dome180_upper" value="204" />
+            <enum name="dome230_upper" value="205" />
+            <enum name="plane_fit" value="207" />
+            <enum name="plane_crop" value="208" />
+            <enum name="plane_full" value="209" />
+            <enum name="multi_fish_eye_horizontal" value="210" />
+            <enum name="multi_fish_eye_vertical" value="211" />
+            <enum name="stereo_sphere_horizontal" value="212" />
+            <enum name="stereo_sphere_vertical" value="213" />
+            <enum name="cube" value="214" />
+        </attr>
+        <attr name="interactionMode" format="enum">
+            <enum name="motion" value="1" />
+            <enum name="touch" value="2" />
+            <enum name="motion_with_touch" value="3" />
+            <enum name="cardborad_motion" value="4" />
+            <enum name="cardborad_motion_with_touch" value="5" />
+        </attr>
+        <attr name="showControls" format="boolean" value="false" />
+    </declare-styleable>
+
+</resources>

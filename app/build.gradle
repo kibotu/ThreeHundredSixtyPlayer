@@ -17,7 +17,7 @@ android {
     buildToolsVersion buildToolsVer
 
     defaultConfig {
-        applicationId "com.exozet.threehundertsixty.app"
+        applicationId "com.exozet.threehundredsixtyplayer.app"
         minSdkVersion minSdkVer
         targetSdkVersion targetSdkVer
         versionCode isCi ? commitCount() : VERSION_CODE
