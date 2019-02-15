@@ -25,6 +25,8 @@ class ThreeHundredSixtyPlayer @JvmOverloads constructor(
 
     var vrLibrary: MDVRLibrary? = null
 
+    var bitmapProvider: BitmapProvider? = null
+
     var onCameraRotation: ((pitch: Float, yaw: Float, roll: Float) -> Unit)? = null
 
     var debug = false
@@ -52,15 +54,18 @@ class ThreeHundredSixtyPlayer @JvmOverloads constructor(
             vrLibrary?.notifyPlayerChanged()
         }
 
-    var bitmap: Bitmap? = null
-
-    var bitmapProvider: BitmapProvider? = null
 
     @ProjectionMode
     var projectionMode: Int = PROJECTION_MODE_SPHERE
         set(value) {
             field = value
             vrLibrary?.switchDisplayMode(context, projectionMode)
+            vrLibrary?.notifyPlayerChanged()
+        }
+
+    var bitmap: Bitmap? = null
+        set(value) {
+            field = value
             vrLibrary?.notifyPlayerChanged()
         }
 
@@ -85,7 +90,6 @@ class ThreeHundredSixtyPlayer @JvmOverloads constructor(
 
         try {
             val a = context.obtainStyledAttributes(attrs, R.styleable.ThreeHundredSixtyPlayer, defStyleAttr, 0)
-
             projectionMode = a.getInt(R.styleable.ThreeHundredSixtyPlayer_projectionMode, 0)
             interactionMode = a.getInt(R.styleable.ThreeHundredSixtyPlayer_interactionMode, 0)
             showControls = a.getBoolean(R.styleable.ThreeHundredSixtyPlayer_showControls, false)

@@ -1,6 +1,7 @@
 package com.exozet.threehundredsixtyplayer.app
 
 import android.Manifest
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -28,8 +29,14 @@ class MainActivity : AppCompatActivity() {
                         ""
         )
 
-        loadFromAssets()
+//        loadFromAssets()
 //        load()
+        loadRuntimeBitmaps()
+    }
+
+    private fun loadRuntimeBitmaps() {
+        startActivity(Intent(this, BitmapActivity::class.java))
+        finish()
     }
 
     private fun load() =

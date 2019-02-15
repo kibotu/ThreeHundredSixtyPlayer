@@ -2,10 +2,8 @@ package com.exozet.threehundredsixtyplayer
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.exozet.threehundredsixtyplayer.ThreeHundredSixtyPlayer.Companion.SHOW_CONTROLS
 import kotlinx.android.synthetic.main.activity_threehundredsixty_player.*
@@ -17,37 +15,6 @@ class ThreeHundredSixtyPlayerActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_threehundredsixty_player)
-
-        var sample1 = "interior_example.jpg"
-        var sample2 = "equirectangular.jpg"
-        var current = sample2
-
-        var image1: Bitmap? = null
-        var image2: Bitmap? = null
-        var current2: Bitmap?
-
-        sample1.parseAssetFile().loadImage(this) {
-            image1 = it
-        }
-
-        sample2.parseAssetFile().loadImage(this) {
-            image2 = it
-        }
-
-        next.setOnClickListener {
-
-            if (current == sample1) {
-                current = sample2
-                current2 = image2
-            } else {
-                current = sample1
-                current2 = image1
-            }
-
-            Log.v("ThreeHundredSixty", "current=$current")
-
-            threeHundredSixtyView.bitmap = current2
-        }
 
         if (intent?.extras?.containsKey(Uri::class.java.canonicalName) == true)
             threeHundredSixtyView.uri = intent?.extras?.getParcelable(Uri::class.java.canonicalName)
