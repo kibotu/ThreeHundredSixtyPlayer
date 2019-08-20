@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Environment
+import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
@@ -22,7 +23,7 @@ fun String.parseExternalStorageFile(): Uri =
 
 fun String.parseFile(): Uri = Uri.fromFile(File(this))
 
-fun Uri.loadImage(context: Context, block: (bitmap: Bitmap?) -> Unit) = GlideApp.with(context)
+fun Uri.loadImage(context: Context, block: (bitmap: Bitmap?) -> Unit) = Glide.with(context)
     .asBitmap()
     .load(this)
     .apply(
