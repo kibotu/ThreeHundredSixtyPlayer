@@ -147,9 +147,11 @@ dependencies {
     implementation libs.rxpermissions
     implementation libs.rx2java
 
-    api project(':ThreeHundertSixtyPlayer')
     implementation libs.glide
+    implementation libs.glideOkHttp3
     kapt libs.glideAnnotationsProcessor
+
+    api project(':ThreeHundertSixtyPlayer')
 }
 
 configurations.all {
