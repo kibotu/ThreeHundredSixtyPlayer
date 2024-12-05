@@ -6,32 +6,36 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.exozet.threehundredsixtyplayer.ThreeHundredSixtyPlayer.Companion.SHOW_CONTROLS
-import kotlinx.android.synthetic.main.activity_threehundredsixty_player.*
+import com.exozet.threehundredsixtyplayer.databinding.ActivityThreehundredsixtyPlayerBinding
 import java.lang.ref.WeakReference
 
 
 class ThreeHundredSixtyPlayerActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivityThreehundredsixtyPlayerBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_threehundredsixty_player)
+        binding = ActivityThreehundredsixtyPlayerBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         if (intent?.extras?.containsKey(Uri::class.java.canonicalName) == true)
-            threeHundredSixtyView.uri = intent?.extras?.getParcelable(Uri::class.java.canonicalName)
+            binding.threeHundredSixtyView.uri =
+                intent?.extras?.getParcelable(Uri::class.java.canonicalName)
 
         if (intent?.extras?.containsKey(SHOW_CONTROLS) == true)
             intent?.extras?.getBoolean(SHOW_CONTROLS)?.let {
-                threeHundredSixtyView.showControls = it
+                binding.threeHundredSixtyView.showControls = it
             }
 
         if (intent?.extras?.containsKey(ProjectionMode::class.java.canonicalName) == true)
             intent?.extras?.getInt(ProjectionMode::class.java.canonicalName)?.let {
-                threeHundredSixtyView.projectionMode = it
+                binding.threeHundredSixtyView.projectionMode = it
             }
 
         if (intent?.extras?.containsKey(InteractionMode::class.java.canonicalName) == true)
             intent?.extras?.getInt(InteractionMode::class.java.canonicalName)?.let {
-                threeHundredSixtyView.interactionMode = it
+                binding.threeHundredSixtyView.interactionMode = it
             }
     }
 
@@ -70,16 +74,28 @@ class ThreeHundredSixtyPlayerActivity : AppCompatActivity() {
         }
 
         fun startActivity() =
-                context.get()!!.startActivity(Intent(context.get(), ThreeHundredSixtyPlayerActivity::class.java)
-                        .apply {
-                            uri?.let { putExtra(Uri::class.java.canonicalName, it) }
-                            projectionMode?.let { putExtra(ProjectionMode::class.java.canonicalName, it) }
-                            interactiveMode?.let { putExtra(InteractionMode::class.java.canonicalName, it) }
-                            showControls?.let { putExtra(SHOW_CONTROLS, it) }
-                        })
+            context.get()!!
+                .startActivity(Intent(context.get(), ThreeHundredSixtyPlayerActivity::class.java)
+                    .apply {
+                        uri?.let { putExtra(Uri::class.java.canonicalName, it) }
+                        projectionMode?.let {
+                            putExtra(
+                                ProjectionMode::class.java.canonicalName,
+                                it
+                            )
+                        }
+                        interactiveMode?.let {
+                            putExtra(
+                                InteractionMode::class.java.canonicalName,
+                                it
+                            )
+                        }
+                        showControls?.let { putExtra(SHOW_CONTROLS, it) }
+                    })
 
         companion object {
-            fun with(context: Context): Builder = Builder().also { it.context = WeakReference(context) }
+            fun with(context: Context): Builder =
+                Builder().also { it.context = WeakReference(context) }
         }
     }
 }

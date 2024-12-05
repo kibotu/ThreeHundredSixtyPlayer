@@ -4,15 +4,18 @@ import android.graphics.Bitmap
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import com.exozet.threehundredsixtyplayer.app.databinding.SampleViewBinding
 import com.exozet.threehundredsixtyplayer.loadImage
 import com.exozet.threehundredsixtyplayer.parseAssetFile
-import kotlinx.android.synthetic.main.sample_view.*
 
 class BitmapActivity : AppCompatActivity() {
 
+    private lateinit var binding: SampleViewBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.sample_view)
+        binding = SampleViewBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         val sample1 = "interior_example.jpg"
         val sample2 = "equirectangular.jpg"
@@ -24,14 +27,14 @@ class BitmapActivity : AppCompatActivity() {
 
         sample1.parseAssetFile().loadImage(this) {
             image1 = it
-            threeHundredSixtyView.bitmap = it
+            binding.threeHundredSixtyView.bitmap = it
         }
 
         sample2.parseAssetFile().loadImage(this) {
             image2 = it
         }
 
-        next.setOnClickListener {
+        binding.next.setOnClickListener {
 
             if (current == sample1) {
                 current = sample2
@@ -43,7 +46,7 @@ class BitmapActivity : AppCompatActivity() {
 
             Log.v("ThreeHundredSixty", "current=$current")
 
-            threeHundredSixtyView.bitmap = current2
+            binding.threeHundredSixtyView.bitmap = current2
         }
     }
 }

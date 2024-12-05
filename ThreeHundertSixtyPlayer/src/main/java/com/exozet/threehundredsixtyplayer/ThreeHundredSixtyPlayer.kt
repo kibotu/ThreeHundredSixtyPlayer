@@ -11,12 +11,12 @@ import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.asha.vrlib.MDVRLibrary
 import com.asha.vrlib.texture.MD360BitmapTexture
-import kotlinx.android.synthetic.main.threehundredsixty_view.view.*
+import com.exozet.threehundredsixtyplayer.databinding.ThreehundredsixtyViewBinding
 import java.util.*
 
 
 class ThreeHundredSixtyPlayer @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : ConstraintLayout(context, attrs, defStyleAttr) {
 
     private val TAG by lazy { "${this::class.java.simpleName}:$uuid" }
@@ -71,7 +71,7 @@ class ThreeHundredSixtyPlayer @JvmOverloads constructor(
     var interactionMode: Int = INTERACTIVE_MODE_TOUCH
         set(value) {
             field = value
-            motionSwitch.isChecked = value == INTERACTIVE_MODE_MOTION_WITH_TOUCH
+            binding.motionSwitch.isChecked = value == INTERACTIVE_MODE_MOTION_WITH_TOUCH
             vrLibrary?.switchInteractiveMode(context, value)
             vrLibrary?.notifyPlayerChanged()
         }
@@ -79,15 +79,22 @@ class ThreeHundredSixtyPlayer @JvmOverloads constructor(
     var showControls: Boolean = false
         set(value) {
             field = value
-            motionSwitch.goneUnless(!value)
+            binding.motionSwitch.goneUnless(!value)
         }
+
+    private lateinit var binding: ThreehundredsixtyViewBinding
 
     init {
         val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        inflater.inflate(R.layout.threehundredsixty_view, this, true)
+        binding = ThreehundredsixtyViewBinding.inflate(inflater, this, true)
 
         try {
-            val a = context.obtainStyledAttributes(attrs, R.styleable.ThreeHundredSixtyPlayer, defStyleAttr, 0)
+            val a = context.obtainStyledAttributes(
+                attrs,
+                R.styleable.ThreeHundredSixtyPlayer,
+                defStyleAttr,
+                0
+            )
             projectionMode = a.getInt(R.styleable.ThreeHundredSixtyPlayer_projectionMode, 0)
             interactionMode = a.getInt(R.styleable.ThreeHundredSixtyPlayer_interactionMode, 0)
             showControls = a.getBoolean(R.styleable.ThreeHundredSixtyPlayer_showControls, false)
@@ -108,8 +115,8 @@ class ThreeHundredSixtyPlayer @JvmOverloads constructor(
         override fun onProvideBitmap(callback: MD360BitmapTexture.Callback?) = with(player) {
             callback?.texture(bitmap)
             vrLibrary?.onTextureResize(
-                    bitmap?.width?.toFloat() ?: width.toFloat(),
-                    bitmap?.height?.toFloat() ?: height.toFloat()
+                bitmap?.width?.toFloat() ?: width.toFloat(),
+                bitmap?.height?.toFloat() ?: height.toFloat()
             )
 
             vrLibrary?.onResume(context)
@@ -123,11 +130,11 @@ class ThreeHundredSixtyPlayer @JvmOverloads constructor(
         bitmapProvider = BitmapProvider(this)
 
         vrLibrary = MDVRLibrary.with(context)
-                .displayMode(projectionMode)
-                .interactiveMode(interactionMode)
-                .pinchEnabled(true)
-                .asBitmap(bitmapProvider)
-                .build(glView)
+            .displayMode(projectionMode)
+            .interactiveMode(interactionMode)
+            .pinchEnabled(true)
+            .asBitmap(bitmapProvider)
+            .build(binding.glView)
 
         vrLibrary?.setDirectorFilter(object : MDVRLibrary.IDirectorFilter {
             override fun onFilterPitch(p0: Float): Float {
@@ -149,21 +156,22 @@ class ThreeHundredSixtyPlayer @JvmOverloads constructor(
             }
         })
 
-        glView.visibility = View.VISIBLE
+        binding.glView.visibility = View.VISIBLE
     }
 
     private fun onCreate() {
-        motionSwitch.setOnCheckedChangeListener { _, isChecked ->
-            interactionMode = if (isChecked) INTERACTIVE_MODE_MOTION_WITH_TOUCH else INTERACTIVE_MODE_TOUCH
+        binding.motionSwitch.setOnCheckedChangeListener { _, isChecked ->
+            interactionMode =
+                if (isChecked) INTERACTIVE_MODE_MOTION_WITH_TOUCH else INTERACTIVE_MODE_TOUCH
         }
     }
 
     private fun busy() {
-        progress.visibility = View.VISIBLE
+        binding.progress.visibility = View.VISIBLE
     }
 
     private fun cancelBusy() {
-        progress.visibility = View.GONE
+        binding.progress.visibility = View.GONE
     }
 
     private fun onResume() {
@@ -207,11 +215,14 @@ class ThreeHundredSixtyPlayer @JvmOverloads constructor(
 
     companion object {
         const val PROJECTION_MODE_SPHERE = MDVRLibrary.PROJECTION_MODE_SPHERE
-        const val PROJECTION_MODE_MULTI_FISH_EYE_HORIZONTAL = MDVRLibrary.PROJECTION_MODE_MULTI_FISH_EYE_HORIZONTAL
-        const val PROJECTION_MODE_MULTI_FISH_EYE_VERTICAL = MDVRLibrary.PROJECTION_MODE_MULTI_FISH_EYE_VERTICAL
+        const val PROJECTION_MODE_MULTI_FISH_EYE_HORIZONTAL =
+            MDVRLibrary.PROJECTION_MODE_MULTI_FISH_EYE_HORIZONTAL
+        const val PROJECTION_MODE_MULTI_FISH_EYE_VERTICAL =
+            MDVRLibrary.PROJECTION_MODE_MULTI_FISH_EYE_VERTICAL
         const val INTERACTIVE_MODE_TOUCH = MDVRLibrary.INTERACTIVE_MODE_TOUCH
         const val INTERACTIVE_MODE_MOTION = MDVRLibrary.INTERACTIVE_MODE_MOTION
-        const val INTERACTIVE_MODE_MOTION_WITH_TOUCH = MDVRLibrary.INTERACTIVE_MODE_MOTION_WITH_TOUCH
+        const val INTERACTIVE_MODE_MOTION_WITH_TOUCH =
+            MDVRLibrary.INTERACTIVE_MODE_MOTION_WITH_TOUCH
         internal const val SHOW_CONTROLS = "SHOW_CONTROLS"
 
         internal fun View.goneUnless(isGone: Boolean = true) {

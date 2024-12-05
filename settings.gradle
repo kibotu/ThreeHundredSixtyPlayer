@@ -1,1 +1,2 @@
-include ':app', ':ThreeHundertSixtyPlayer'
+include ':app'
+include ':ThreeHundertSixtyPlayer'
