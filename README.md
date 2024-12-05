@@ -1,4 +1,4 @@
-# ThreeHundredSixtyPlayer [![API](https://img.shields.io/badge/API-15%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=17) [![Gradle Version](https://img.shields.io/badge/gradle-5.2.1-green.svg)](https://docs.gradle.org/current/release-notes)  [![Kotlin](https://img.shields.io/badge/kotlin-1.3.21-green.svg)](https://kotlinlang.org/) [ ![Download](https://api.bintray.com/packages/exozetag/maven/Three-Hundred-Sixty/images/download.svg) ](https://bintray.com/exozetag/maven/Three-Hundred-Sixty/_latestVersion)
+# ThreeHundredSixtyPlayer  [![Android CI](https://github.com/kibotu/mobile-360-player/actions/workflows/android.yml/badge.svg)](https://github.com/kibotu/mobile-360-player/actions/workflows/android.yml) [![](https://jitpack.io/v/kibotu/mobile-360-player.svg)](https://jitpack.io/#kibotu/mobile-360-player) [![API](https://img.shields.io/badge/API-21%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=21) [![Gradle Version](https://img.shields.io/badge/gradle-8.1.1-green.svg)](https://docs.gradle.org/current/release-notes) [![Kotlin](https://img.shields.io/badge/kotlin-2.1.0-green.svg)](https://kotlinlang.org/)
 
 Native OpenGLES 2.0 360 Degree Player
 
@@ -92,7 +92,7 @@ dependencyResolutionManagement {
 }
 
 dependencies {
-    implementation 'com.github.kibotu:mobile-360-player:-SNAPSHOT'
+    implementation 'com.exozet:ThreeHundertSixtyPlayer:-SNAPSHOT'
 }
 ```
 
