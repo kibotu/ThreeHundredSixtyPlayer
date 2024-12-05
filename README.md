@@ -56,18 +56,18 @@ ThreeHundredSixtyPlayerActivity.Builder
 
 ## Projection Modes
 
-#### [Equirectangular](docs/equirectangular.webp)
+#### [Equirectangular](https://en.wikipedia.org/wiki/Equirectangular_projection)
 
-![Equirectangular](https://developers.theta360.com/intl/common/img/equirectangular.bmp)
+![Equirectangular](docs/dual-fisheye.jpg)
 
 ```kotlin
 ThreeHundredSixtyPlayer.with(this)
     .projectMode(ThreeHundredSixtyPlayer.PROJECTION_MODE_SPHERE) // default
 ```
 
-#### [Dual-Fisheye](docs/dual-fisheye.jpg)
+#### [Dual-Fisheye](https://en.wikipedia.org/wiki/Fisheye_lens)
 
-![Dual-Fisheye](https://developers.theta360.com/intl/common/img/dualfisheye.bmp)
+![Dual-Fisheye](docs/dual-fisheye.jpg)
 
 ```kotlin
 ThreeHundredSixtyPlayer.with(this)
