@@ -58,7 +58,7 @@ ThreeHundredSixtyPlayerActivity.Builder
 
 #### [Equirectangular](https://en.wikipedia.org/wiki/Equirectangular_projection)
 
-![Equirectangular](docs/dual-fisheye.jpg)
+![Equirectangular](docs/equirectangular.webp)
 
 ```kotlin
 ThreeHundredSixtyPlayer.with(this)
