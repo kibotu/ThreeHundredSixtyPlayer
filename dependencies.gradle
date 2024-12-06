@@ -34,9 +34,7 @@ ext.libs = [
         zoomage          : "com.github.kibotu:zoomage:2.0.8",
         numberprogressbar: "com.github.kibotu:NumberProgressBar:2.0.1",
         material         : "com.google.android.material:material:1.12.0",
-
-        md360Player      : "com.github.ashqal:MD360Player4Android:2.5.0",
-        md360PlayerBeta  : "com.github.kibotu:MD360Player4Android:2.6.2",
+        md360Player      : "com.github.kibotu:MD360Player4Android:3.0.2",
 ]
 
 ext.desugaring = [
