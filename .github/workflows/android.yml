@@ -40,7 +40,7 @@ jobs:
           server-username: MAVEN_USERNAME
           server-password: MAVEN_PASSWORD
       - name: Publish package to Maven Central Repository
-        run: ./gradlew artifactoryPublish --refresh-dependencies --s
+        run: ./gradlew :ThreeHundertSixtyPlayer:assemble :ThreeHundertSixtyPlayer:artifactoryPublish --refresh-dependencies --s
         env:
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
