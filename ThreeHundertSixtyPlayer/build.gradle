@@ -4,7 +4,7 @@ ext {
 }
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'maven-publish'
+apply from: ".././publish.gradle"
 
 android {
 
@@ -111,17 +111,4 @@ dependencies {
     implementation libs.glide
     implementation libs.glideOkHttp3
     implementation libs.md360Player
-}
-
-afterEvaluate {
-    publishing {
-        publications {
-            release(MavenPublication) {
-                from components.release
-                groupId = "net.kibotu"
-                artifactId = 'ThreeHundertSixtyPlayer'
-                version = VERSION_NAME
-            }
-        }
-    }
 }
