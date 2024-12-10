@@ -118,7 +118,7 @@ afterEvaluate {
         publications {
             release(MavenPublication) {
                 from components.release
-                groupId = "com.exozet"
+                groupId = "net.kibotu"
                 artifactId = 'ThreeHundertSixtyPlayer'
                 version = VERSION_NAME
             }
