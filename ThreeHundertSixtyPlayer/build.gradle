@@ -1,10 +1,7 @@
-ext {
-    versionName = VERSION_NAME
-    VERSION_CODE = 1
-}
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply from: ".././publish.gradle"
+apply plugin: 'maven-publish'
+apply plugin: 'com.vanniktech.maven.publish'
 
 android {
 
@@ -15,8 +12,6 @@ android {
     defaultConfig {
         minSdk minSdkVer
         targetSdk targetSdkVer
-        versionCode VERSION_CODE
-        versionName VERSION_NAME
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunnerArguments clearPackageData: 'true'
@@ -25,9 +20,13 @@ android {
     }
 
     buildTypes {
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro', '../proguard-debug.pro'
+        }
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro', '../proguard-release.pro'
         }
     }
 
@@ -58,13 +57,8 @@ android {
         jvmTarget = "17"
         allWarningsAsErrors = false
         kotlinOptions.verbose = true
-
-        //## Hint: https://kotlinlang.org/docs/reference/java-to-kotlin-interop.html#default-methods-in-interfaces
-        //## Hint: "-Xjvm-default=all-compatibility" and "-Xjvm-default=all-compatibility" will also work.
         freeCompilerArgs += [
-                "-Xjvm-default=all-compatibility",
-                // disable linting for opt-in annotations
-                "-opt-in=kotlin.RequiresOptIn"
+                "-Xjvm-default=all-compatibility"
         ]
     }
 
@@ -111,4 +105,28 @@ dependencies {
     implementation libs.glide
     implementation libs.glideOkHttp3
     implementation libs.md360Player
+}
+
+if (!isJitpack) {
+    apply plugin: 'com.vanniktech.maven.publish'
+    mavenPublishing {
+        publishToMavenCentral(com.vanniktech.maven.publish.SonatypeHost.CENTRAL_PORTAL, true)
+        signAllPublications()
+    }
+}
+
+if (isJitpack) {
+    apply plugin: 'maven-publish'
+    afterEvaluate {
+        publishing {
+            publications {
+                release(MavenPublication) {
+                    from components.release
+                    groupId = GROUP
+                    artifactId = POM_ARTIFACT_ID
+                    version = version
+                }
+            }
+        }
+    }
 }
