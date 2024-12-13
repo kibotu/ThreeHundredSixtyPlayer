@@ -4,7 +4,7 @@
 
 Native OpenGLES 2.0 360 Degree Player
 
-[![Screenshot](https://git.exozet.com/mobile-de/POC/android-360-player/raw/master/demo.gif)](https://git.exozet.com/mobile-de/POC/android-360-player/raw/master/demo.gif)
+[![Screenshot](docs/demo.gif)](docs/demo.gif)
 
 # How to use
 
