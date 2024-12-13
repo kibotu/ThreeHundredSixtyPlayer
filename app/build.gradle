@@ -130,5 +130,5 @@ dependencies {
     implementation libs.glide
 
     implementation libs.rx2java
-    implementation project(':ThreeHundertSixtyPlayer')
+    implementation project(':ThreeHundredSixtyPlayer')
 }
