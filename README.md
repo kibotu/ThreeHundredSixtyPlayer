@@ -6,6 +6,38 @@ Native OpenGLES 2.0 360 Degree Player
 
 [![Screenshot](docs/demo.gif)](docs/demo.gif)
 
+# How to install
+
+## MavenCentral
+
+```groovy 
+allprojects {
+    repositories {
+        mavenCentral()
+    }
+}
+
+dependencies {
+    implementation 'net.kibotu:ThreeHundredSixtyPlayer:{latest-version}'
+}
+
+```
+
+## Jitpack
+
+```groovy
+allprojects {
+    repositories {
+        ...
+        maven { url 'https://jitpack.io' }
+    }
+}
+
+dependencies {
+    implementation 'com.github.kibotu:ThreeHundredSixtyPlayer:{latest-version}'
+}
+```
+
 # How to use
 
 ## As view
@@ -81,22 +113,6 @@ ThreeHundredSixtyPlayer.with(this)
 * INTERACTIVE_MODE_TOUCH - Swipe Gestures
 * INTERACTIVE_MODE_MOTION - Motion Sensors
 * INTERACTIVE_MODE_MOTION_WITH_TOUCH - Both combined
-
-# How to install (tbd)
-
-```groovy
-dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-    repositories {
-        mavenCentral()
-        maven { url 'https://jitpack.io' }
-    }
-}
-
-dependencies {
-    implementation 'com.exozet:ThreeHundertSixtyPlayer:-SNAPSHOT'
-}
-```
 
 # GL_MAX_TEXTURE_SIZE
 
