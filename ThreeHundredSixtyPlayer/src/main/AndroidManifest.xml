@@ -8,6 +8,7 @@
     <application>
 
         <activity
+            android:exported="true"
             android:name="com.exozet.threehundredsixtyplayer.ThreeHundredSixtyPlayerActivity"
             android:configChanges="screenSize|orientation"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" />
